@@ -35,15 +35,17 @@ POS System API documentation tersedia dalam format Swagger/OpenAPI 3.0.
 
 ## Test Credentials
 
-Gunakan credential berikut untuk testing:
+Gunakan credential berikut untuk testing (sesuai seeder):
 
 ### Admin User
+- Email: `admin@example.com`
 - Username: `admin`
 - Password: `password`
 - Role: `admin`
 
 ### Kasir User
-- Username: `kasir1` atau `kasir2`
+- Email: `fakhirul@example.com`
+- Username: `kasir_fakhirul`
 - Password: `password`
 - Role: `kasir`
 
@@ -59,28 +61,28 @@ API diorganisir dalam beberapa kategori:
 ### Kategoris (CRUD)
 - GET /kategoris - List semua kategori
 - POST /kategoris - Buat kategori baru
-- GET /kategoris/{id} - Detail kategori
-- PUT /kategoris/{id} - Update kategori
-- DELETE /kategoris/{id} - Delete kategori
+- GET /kategoris/{kategori} - Detail kategori
+- PUT /kategoris/{kategori} - Update kategori
+- DELETE /kategoris/{kategori} - Delete kategori
 
 ### Barangs (CRUD)
 - GET /barangs - List barang (dengan pagination & filter)
 - POST /barangs - Buat barang baru
-- GET /barangs/{kode_barang} - Detail barang
-- PUT /barangs/{kode_barang} - Update barang
-- DELETE /barangs/{kode_barang} - Delete barang
+- GET /barangs/{barang} - Detail barang
+- PUT /barangs/{barang} - Update barang
+- DELETE /barangs/{barang} - Delete barang
 
 ### Pelanggans (CRUD)
 - GET /pelanggans - List pelanggan (dengan pagination)
 - POST /pelanggans - Buat pelanggan baru
-- GET /pelanggans/{id_pelanggan} - Detail pelanggan
-- PUT /pelanggans/{id_pelanggan} - Update pelanggan
-- DELETE /pelanggans/{id_pelanggan} - Delete pelanggan
+- GET /pelanggans/{pelanggan} - Detail pelanggan
+- PUT /pelanggans/{pelanggan} - Update pelanggan
+- DELETE /pelanggans/{pelanggan} - Delete pelanggan
 
 ### Penjualans (Sales)
 - GET /penjualans - List penjualan (dengan pagination)
 - POST /penjualans - Buat penjualan baru dengan items (atomic transaction)
-- GET /penjualans/{id_nota} - Detail penjualan dengan items
+- GET /penjualans/{penjualan} - Detail penjualan dengan items
 - GET /penjualans/summary - Ringkasan penjualan hari ini
 
 ### Analytics

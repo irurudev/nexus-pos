@@ -6,6 +6,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use OpenApi\Annotations as OA;
 
 class AuthController extends BaseController
@@ -132,7 +133,16 @@ class AuthController extends BaseController
     public function logout()
     {
         try {
-            auth()->user()->currentAccessToken()->delete();
+            // Ensure we have an authenticated user and safely delete the current token
+            $user = Auth::user();
+            if (! $user) {
+                return $this->errorResponse('Unauthorized', 401);
+            }
+
+            /** @var \App\Models\User $user */
+            /** @var \Laravel\Sanctum\PersonalAccessToken|null $currentToken */
+            $currentToken = $user->currentAccessToken();
+            $currentToken?->delete();
 
             return $this->successResponse(
                 message: 'Logout berhasil'
@@ -166,7 +176,10 @@ class AuthController extends BaseController
     public function me()
     {
         try {
-            $user = auth()->user();
+            $user = Auth::user();
+            if (! $user) {
+                return $this->errorResponse('Unauthorized', 401);
+            }
 
             return $this->successResponse([
                 'id' => $user->id,

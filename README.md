@@ -1,59 +1,48 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Project Documentation Summary 📚
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This README aggregates and summarizes the key documentation files present in the repository so you can quickly find and use them.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🔎 Quick links & Short summaries
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **IMPLEMENTASI_LENGKAP.md** — Full, detailed implementation documentation: endpoints, file structure, testing steps, DB schema and feature explanations. (Authoritative, long-form reference)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **RINGKASAN_IMPLEMENTASI.md** — Short project summary and quickstart: highlights, feature checklist, and compact API endpoints list for a fast overview. ✅
 
-## Learning Laravel
+- **SWAGGER_IMPLEMENTATION.md** — Notes about Swagger/OpenAPI integration: generator, Swagger UI route, usage and integration options (import into Postman, codegen, etc.).
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+- **be/POS_API_DOCUMENTATION.md** — API reference for backend: endpoint details, request/response examples, test instructions, and local run/seeding steps. Useful for integration and testing. 🔧
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- **be/SWAGGER_DOCUMENTATION.md** — Guide for using the generated Swagger docs and Swagger UI (how to authorize and try endpoints). 🎯
 
-## Laravel Sponsors
+- **be/DATABASE_STRUCTURE.md** — Database schema documentation: tables, columns, and special notes (including `audit_logs` structure and constraints). 🗄️
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- **be/ACCESS_CONTROL.md** — RBAC & audit policy: which actions are audited, audit log format, admin-only audit log endpoint and recommended controls. 🔐
 
-### Premium Partners
+- **be/FOLDER_STRUCTURE.md** — Backend folder layout overview and where to find models, controllers, observers, requests, etc. 🗂️
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+- **fe/FOLDER_STRUCTURE.md** — Frontend folder layout and feature mapping (Auth, Inventory, POS, Analytics) plus where to find UI components. 🎨
 
-## Contributing
+- **podman/README.md** — Container and local environment instructions: how to start with Podman/docker-compose and how to run commands in containers. 🐳
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- **be/README.md** — Backend-specific readme: running migrations, generating swagger, migration/seed commands and basic troubleshooting. ⚙️
 
-## Code of Conduct
+- **fe/README.md** — Frontend-specific readme: how to install, run the Vite dev server and build the frontend. 🚀
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+## ⚙️ Developer notes
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+- Swagger/OpenAPI JSON is generated at `be/public/api/swagger.json` via `php artisan l5-swagger:generate` and should be regenerated after changing controller annotations.
+- Route naming was updated to use model-binding parameter names (e.g., `{kategori}`, `{pelanggan}`, `{barang}`, `{penjualan}`) — documentation files were synced accordingly.
+- Added/Documented endpoints: Audit logs (`GET /api/audit-logs`) and Analytics (`/api/analytics/*`) — reflected in the docs and Swagger.
 
-## License
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+If you'd like, I can:
+1. Move all `.md` files into a `README/` folder and update links accordingly. ✅
+2. Add a small table of contents with direct anchors for each doc. 🔖
+3. Generate a single compiled PDF of all docs for distribution. 📄
+
+Which of these would you like me to do next?

@@ -106,9 +106,9 @@ Response:
 ```
 GET    /api/kategoris                    # List semua kategori
 POST   /api/kategoris                    # Create kategori (admin only)
-GET    /api/kategoris/{id}               # Get detail kategori
-PUT    /api/kategoris/{id}               # Update kategori (admin only)
-DELETE /api/kategoris/{id}               # Delete kategori (admin only)
+GET    /api/kategoris/{kategori}         # Get detail kategori
+PUT    /api/kategoris/{kategori}         # Update kategori (admin only)
+DELETE /api/kategoris/{kategori}         # Delete kategori (admin only)
 ```
 
 **Request Body (POST/PUT):**
@@ -124,9 +124,9 @@ DELETE /api/kategoris/{id}               # Delete kategori (admin only)
 ```
 GET    /api/barangs                      # List barang (dengan filter & search)
 POST   /api/barangs                      # Create barang (admin only)
-GET    /api/barangs/{kode_barang}        # Get detail barang
-PUT    /api/barangs/{kode_barang}        # Update barang (admin only)
-DELETE /api/barangs/{kode_barang}        # Delete barang (admin only)
+GET    /api/barangs/{barang}             # Get detail barang
+PUT    /api/barangs/{barang}             # Update barang (admin only)
+DELETE /api/barangs/{barang}             # Delete barang (admin only)
 ```
 
 **Query Parameters (GET):**
@@ -152,9 +152,9 @@ DELETE /api/barangs/{kode_barang}        # Delete barang (admin only)
 ```
 GET    /api/pelanggans                   # List pelanggan
 POST   /api/pelanggans                   # Create pelanggan
-GET    /api/pelanggans/{id_pelanggan}    # Get detail pelanggan
-PUT    /api/pelanggans/{id_pelanggan}    # Update pelanggan
-DELETE /api/pelanggans/{id_pelanggan}    # Delete pelanggan
+GET    /api/pelanggans/{pelanggan}       # Get detail pelanggan
+PUT    /api/pelanggans/{pelanggan}       # Update pelanggan
+DELETE /api/pelanggans/{pelanggan}       # Delete pelanggan
 ```
 
 **Query Parameters (GET):**
@@ -177,9 +177,36 @@ DELETE /api/pelanggans/{id_pelanggan}    # Delete pelanggan
 ```
 GET    /api/penjualans                   # List penjualan
 POST   /api/penjualans                   # Create penjualan (kasir)
-GET    /api/penjualans/{id_nota}         # Get detail penjualan
+GET    /api/penjualans/{penjualan}       # Get detail penjualan
 GET    /api/penjualans/summary           # Dashboard summary
 ```
+
+### Audit Logs (Admin only)
+```
+GET    /api/audit-logs                   # List audit entries (filterable)
+```
+Query parameters:
+- `per_page` - number (default 20)
+- `user_id` - filter by user id
+- `auditable_type` - filter by model class (e.g., `App\\Models\\Barang`)
+
+> Note: This endpoint is restricted to **admin** users only.
+
+### Analytics & Reporting
+```
+GET    /api/analytics/summary           # Sales summary (start_date, end_date)
+GET    /api/analytics/top-kategori      # Top categories (limit)
+GET    /api/analytics/kasir-performance # Kasir performance (year)
+```
+Query examples:
+- `/api/analytics/summary?start_date=2025-01-01&end_date=2025-01-31`
+- `/api/analytics/top-kategori?limit=10&start_date=2025-01-01&end_date=2025-01-31`
+
+---
+
+### API Documentation / Swagger
+- Swagger UI: `http://localhost:8303/api/documentation`
+- OpenAPI JSON: `http://localhost:8303/api/swagger.json`
 
 **POST - Create Penjualan (Kasir):**
 ```json

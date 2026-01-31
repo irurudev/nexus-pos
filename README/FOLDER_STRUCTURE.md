@@ -11,8 +11,6 @@ project-root/
 ├── app/
 │   ├── Actions/                # LOGIKA BISNIS SPESIFIK (The "How")
 │   │   └── 
-│   ├── Contracts/              # INTERFACE (Abstraksi)
-│   │   └── 
 │   ├── DTOs/ (Data Transfer)   # STRUKTUR DATA (Type-safety antar layer)
 │   │   └── 
 │   ├── Enums/                  # STANDAR NILAI (Avoid Magic Numbers)
@@ -22,16 +20,17 @@ project-root/
 │   │   │   ├── Api/            # API Controllers (dengan Swagger Attributes)
 │   │   │   │   ├── BaseController.php
 │   │   │   │   └── OrderController.php
-│   │   │   └── Web/            # Web Controllers (Blade/Inertia)
-│   │   ├── Middleware/         # FILTER (Auth, Role, etc)
+│   │   │   └── Web/            # Web Controllers
 │   │   └── Requests/           # VALIDASI & SCHEMA SWAGGER
 │   │       ├── Auth/
 │   │       └── Order/
 │   │           └── StoreOrderRequest.php
 │   ├── Models/                 # DATABASE SCHEMA & RELATIONSHIP
-│   ├── Providers/              # KONFIGURASI SERVICES
+│   ├── Observers/             # Model observers (e.g., AuditObserver)
+│   ├── Policies/              # Authorization policies (PenjualanPolicy, BarangPolicy, etc.)
+│   ├── Providers/             # KONFIGURASI SERVICES
 │   │   └── AppServiceProvider.php
-│   ├── Services/               # INTEGRASI EKSTERNAL (The "Outside World")
+│   ├── Services/              # INTEGRASI EKSTERNAL (The "Outside World")
 │   │   ├── MidtransService.php
 │   │   └── FirebaseService.php
 │   └── Traits/                 # REUSABLE CODE (Logika yang sering dipakai)

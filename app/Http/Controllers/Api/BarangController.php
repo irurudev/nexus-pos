@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\Barang\DestroyBarangRequest;
+use App\Http\Requests\Barang\StoreBarangRequest;
+use App\Http\Requests\Barang\UpdateBarangRequest;
 use App\Models\Barang;
 use Illuminate\Http\Request;
 use OpenApi\Annotations as OA;
@@ -175,7 +178,7 @@ class BarangController extends BaseController
      *   @OA\Response(response=422, description="Validation Error")
      * )
      */
-    public function store(\App\Http\Requests\Barang\StoreBarangRequest $request)
+    public function store(StoreBarangRequest $request)
     {
         try {
             $validated = $request->validated();
@@ -237,7 +240,7 @@ class BarangController extends BaseController
      *   @OA\Response(response=404, description="Not Found")
      * )
      */
-    public function update(\App\Http\Requests\Barang\UpdateBarangRequest $request, Barang $barang)
+    public function update(UpdateBarangRequest $request, Barang $barang)
     {
         try {
             $validated = $request->validated();
@@ -280,9 +283,11 @@ class BarangController extends BaseController
      *   @OA\Response(response=404, description="Not Found")
      * )
      */
-    public function destroy(\App\Http\Requests\Barang\DestroyBarangRequest $request, Barang $barang)
+    public function destroy(DestroyBarangRequest $request, Barang $barang)
     {
         try {
+            $request->validated();
+
             $barang->delete();
 
             return $this->successResponse(

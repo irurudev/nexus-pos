@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\Kategori\DestroyKategoriRequest;
+use App\Http\Requests\Kategori\StoreKategoriRequest;
+use App\Http\Requests\Kategori\UpdateKategoriRequest;
 use App\Models\Kategori;
 use Illuminate\Http\Request;
 use OpenApi\Annotations as OA;
@@ -83,14 +86,14 @@ class KategoriController extends BaseController
 
     /**
      * @OA\Get(
-     *     path="/kategoris/{id}",
+     *     path="/kategoris/{kategori}",
      *     operationId="getKategoriDetail",
      *     tags={"Kategoris"},
      *     summary="Dapatkan detail kategori beserta barangnya",
      *     security={{"bearerAuth":{}}},
      *
      *     @OA\Parameter(
-     *         name="id",
+     *         name="kategori",
      *         in="path",
      *         description="ID Kategori",
      *         required=true,
@@ -113,17 +116,10 @@ class KategoriController extends BaseController
      *     )
      * )
      */
-    public function show($id)
+    public function show(Kategori $kategori)
     {
         try {
-            $kategori = Kategori::with('barangs')->find($id);
-
-            if (! $kategori) {
-                return $this->errorResponse(
-                    'Kategori tidak ditemukan',
-                    404
-                );
-            }
+            $kategori->load('barangs');
 
             return $this->successResponse($kategori, 'Data kategori berhasil diambil');
         } catch (\Exception $e) {
@@ -167,7 +163,7 @@ class KategoriController extends BaseController
      *     @OA\Response(response=422, description="Validation Error")
      * )
      */
-    public function store(\App\Http\Requests\Kategori\StoreKategoriRequest $request)
+    public function store(StoreKategoriRequest $request)
     {
         try {
             $validated = $request->validated();
@@ -188,7 +184,7 @@ class KategoriController extends BaseController
      */
     /**
      * @OA\Put(
-     *     path="/kategoris/{id}",
+     *     path="/kategoris/{kategori}",
      *     operationId="updateKategori",
      *     tags={"Kategoris"},
      *     summary="Update kategori",
@@ -225,18 +221,9 @@ class KategoriController extends BaseController
      *     @OA\Response(response=422, description="Validation Error")
      * )
      */
-    public function update(\App\Http\Requests\Kategori\UpdateKategoriRequest $request, $id)
+    public function update(UpdateKategoriRequest $request, Kategori $kategori)
     {
         try {
-            $kategori = Kategori::find($id);
-
-            if (! $kategori) {
-                return $this->errorResponse(
-                    'Kategori tidak ditemukan',
-                    404
-                );
-            }
-
             $validated = $request->validated();
 
             $kategori->update($validated);
@@ -255,7 +242,7 @@ class KategoriController extends BaseController
      */
     /**
      * @OA\Delete(
-     *     path="/kategoris/{id}",
+     *     path="/kategoris/{kategori}",
      *     operationId="deleteKategori",
      *     tags={"Kategoris"},
      *     summary="Hapus kategori",
@@ -280,18 +267,9 @@ class KategoriController extends BaseController
      *     @OA\Response(response=404, description="Not Found")
      * )
      */
-    public function destroy(\App\Http\Requests\Kategori\DestroyKategoriRequest $request, $id)
+    public function destroy(DestroyKategoriRequest $request, Kategori $kategori)
     {
         try {
-            $kategori = Kategori::find($id);
-
-            if (! $kategori) {
-                return $this->errorResponse(
-                    'Kategori tidak ditemukan',
-                    404
-                );
-            }
-
             $kategori->delete();
 
             return $this->successResponse(

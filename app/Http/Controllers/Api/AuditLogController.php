@@ -7,6 +7,21 @@ use Illuminate\Http\Request;
 
 class AuditLogController extends BaseController
 {
+    /**
+     * @OA\Get(
+     *   path="/audit-logs",
+     *   operationId="getAuditLogs",
+     *   tags={"AuditLogs"},
+     *   summary="Dapatkan audit logs (admin only)",
+     *   security={{"bearerAuth":{}}},
+     *
+     *   @OA\Parameter(name="per_page", in="query", @OA\Schema(type="integer", example=20)),
+     *   @OA\Parameter(name="user_id", in="query", @OA\Schema(type="integer", example=1)),
+     *   @OA\Parameter(name="auditable_type", in="query", @OA\Schema(type="string", example="App\\Models\\Barang")),
+     *
+     *   @OA\Response(response=200, description="OK", @OA\JsonContent(ref="#/components/schemas/Pagination"))
+     * )
+     */
     public function index(Request $request)
     {
         try {

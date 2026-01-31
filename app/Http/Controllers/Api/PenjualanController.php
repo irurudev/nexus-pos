@@ -122,14 +122,14 @@ class PenjualanController extends BaseController
 
     /**
      * @OA\Get(
-     *     path="/penjualans/{id_nota}",
+     *     path="/penjualans/{penjualan}",
      *     operationId="getPenjualanDetail",
      *     tags={"Penjualans"},
      *     summary="Dapatkan detail penjualan",
      *     security={{"bearerAuth":{}}},
      *
      *     @OA\Parameter(
-     *         name="id_nota",
+     *         name="penjualan",
      *         in="path",
      *         required=true,
      *
@@ -146,20 +146,10 @@ class PenjualanController extends BaseController
      *     @OA\Response(response=404, description="Not Found")
      * )
      */
-    public function show($id_nota)
+    public function show(Penjualan $penjualan)
     {
         try {
-            $penjualan = Penjualan::with(['itemPenjualans' => function ($q) {
-                $q->latest();
-            }, 'itemPenjualans.barang' => function ($q) { $q->withTrashed(); }, 'pelanggan', 'user'])
-                ->find($id_nota);
-
-            if (! $penjualan) {
-                return $this->errorResponse(
-                    'Penjualan tidak ditemukan',
-                    404
-                );
-            }
+            $penjualan->load([ 'itemPenjualans' => function ($q) { $q->latest(); }, 'itemPenjualans.barang' => function ($q) { $q->withTrashed(); }, 'pelanggan', 'user' ]);
 
             $this->authorize('view', $penjualan);
 

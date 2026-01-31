@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AnalyticsController;
+use App\Http\Controllers\Api\AuditLogController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BarangController;
 use App\Http\Controllers\Api\KategoriController;
@@ -25,7 +26,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Custom routes
     Route::get('/penjualans/summary', [PenjualanController::class, 'summary']);
-    Route::get('/audit-logs', [\App\Http\Controllers\Api\AuditLogController::class, 'index']);
+    Route::get('/audit-logs', [AuditLogController::class, 'index']);
 
     // Analytics routes
     Route::get('/analytics/summary', [AnalyticsController::class, 'summary']);

@@ -4,11 +4,27 @@ namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use OpenApi\Annotations as OA;
 
 class AnalyticsController extends BaseController
 {
     /**
-     * Summary analytics: total penjualan, laba, pajak, diskon, transaksi.
+     * @OA\Get(
+     *   path="/analytics/summary",
+     *   operationId="analyticsSummary",
+     *   tags={"Analytics"},
+     *   summary="Ringkasan penjualan (total, pajak, diskon, laba)",
+     *   security={{"bearerAuth":{}}},
+     *
+     *   @OA\Parameter(name="start_date", in="query", @OA\Schema(type="string", format="date", example="2025-01-01")),
+     *   @OA\Parameter(name="end_date", in="query", @OA\Schema(type="string", format="date", example="2025-01-31")),
+     *
+     *   @OA\Response(
+     *     response=200,
+     *     description="OK",
+     *     @OA\JsonContent(type="object", @OA\Property(property="data", type="object"))
+     *   )
+     * )
      */
     public function summary(Request $request)
     {
@@ -52,7 +68,19 @@ class AnalyticsController extends BaseController
     }
 
     /**
-     * Top kategori berdasarkan qty terjual.
+     * @OA\Get(
+     *   path="/analytics/top-kategori",
+     *   operationId="analyticsTopKategori",
+     *   tags={"Analytics"},
+     *   summary="Top kategori berdasarkan qty terjual",
+     *   security={{"bearerAuth":{}}},
+     *
+     *   @OA\Parameter(name="start_date", in="query", @OA\Schema(type="string", format="date", example="2025-01-01")),
+     *   @OA\Parameter(name="end_date", in="query", @OA\Schema(type="string", format="date", example="2025-01-31")),
+     *   @OA\Parameter(name="limit", in="query", @OA\Schema(type="integer", example=10)),
+     *
+     *   @OA\Response(response=200, description="OK", @OA\JsonContent(type="object"))
+     * )
      */
     public function topKategori(Request $request)
     {
@@ -87,7 +115,16 @@ class AnalyticsController extends BaseController
     }
 
     /**
-     * Performa kasir berdasarkan total penjualan per bulan.
+     * @OA\Get(
+     *   path="/analytics/kasir-performance",
+     *   operationId="analyticsKasirPerformance",
+     *   tags={"Analytics"},
+     *   summary="Performa kasir per bulan",
+     *   security={{"bearerAuth":{}}},
+     *
+     *   @OA\Parameter(name="year", in="query", @OA\Schema(type="integer", example=2025)),
+     *   @OA\Response(response=200, description="OK", @OA\JsonContent(type="object"))
+     * )
      */
     public function kasirPerformance(Request $request)
     {

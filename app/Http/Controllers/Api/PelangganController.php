@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\Pelanggan\DestroyPelangganRequest;
+use App\Http\Requests\Pelanggan\StorePelangganRequest;
+use App\Http\Requests\Pelanggan\UpdatePelangganRequest;
 use App\Models\Pelanggan;
 use Illuminate\Http\Request;
 use OpenApi\Annotations as OA;
@@ -81,12 +84,12 @@ class PelangganController extends BaseController
      * Get single pelanggan detail.
      *
      * @OA\Get(
-     *   path="/pelanggans/{id}",
+     *   path="/pelanggans/{pelanggan}",
      *   tags={"Pelanggans"},
      *   security={{"bearerAuth":{}}},
      *
      *   @OA\Parameter(
-     *     name="id",
+     *     name="pelanggan",
      *     in="path",
      *     required=true,
      *     description="ID pelanggan",
@@ -140,7 +143,7 @@ class PelangganController extends BaseController
      *   @OA\Response(response=422, description="Validation Error")
      * )
      */
-    public function store(\App\Http\Requests\Pelanggan\StorePelangganRequest $request)
+    public function store(StorePelangganRequest $request)
     {
         try {
             $validated = $request->validated();
@@ -165,12 +168,12 @@ class PelangganController extends BaseController
      * Update pelanggan.
      *
      * @OA\Put(
-     *   path="/pelanggans/{id}",
+     *   path="/pelanggans/{pelanggan}",
      *   tags={"Pelanggans"},
      *   security={{"bearerAuth":{}}},
      *
      *   @OA\Parameter(
-     *     name="id",
+     *     name="pelanggan",
      *     in="path",
      *     required=true,
      *     description="ID pelanggan",
@@ -200,7 +203,7 @@ class PelangganController extends BaseController
      *   @OA\Response(response=404, description="Not Found")
      * )
      */
-    public function update(\App\Http\Requests\Pelanggan\UpdatePelangganRequest $request, Pelanggan $pelanggan)
+    public function update(UpdatePelangganRequest $request, Pelanggan $pelanggan)
     {
         try {
             \Illuminate\Support\Facades\Log::debug('PelangganController update called', ['id' => $pelanggan->id_pelanggan, 'user_id' => $request->user()?->id]);
@@ -222,12 +225,12 @@ class PelangganController extends BaseController
      * Delete pelanggan.
      *
      * @OA\Delete(
-     *   path="/pelanggans/{id}",
+     *   path="/pelanggans/{pelanggan}",
      *   tags={"Pelanggans"},
      *   security={{"bearerAuth":{}}},
      *
      *   @OA\Parameter(
-     *     name="id",
+     *     name="pelanggan",
      *     in="path",
      *     required=true,
      *     description="ID pelanggan",
@@ -245,7 +248,7 @@ class PelangganController extends BaseController
      *   @OA\Response(response=404, description="Not Found")
      * )
      */
-    public function destroy(\App\Http\Requests\Pelanggan\DestroyPelangganRequest $request, Pelanggan $pelanggan)
+    public function destroy(DestroyPelangganRequest $request, Pelanggan $pelanggan)
     {
         try {
             \Illuminate\Support\Facades\Log::debug('PelangganController destroy called', ['id' => $pelanggan->id_pelanggan, 'user_id' => $request->user()?->id]);

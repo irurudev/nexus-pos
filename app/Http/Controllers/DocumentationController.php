@@ -233,14 +233,14 @@ class DocumentationController extends Controller
                         ],
                     ],
                 ],
-                '/kategoris/{id}' => [
+                '/kategoris/{kategori}' => [
                     'get' => [
                         'tags' => ['Kategoris'],
                         'summary' => 'Get kategori detail',
                         'security' => [['bearerAuth' => []]],
                         'parameters' => [
                             [
-                                'name' => 'id',
+                                'name' => 'kategori',
                                 'in' => 'path',
                                 'required' => true,
                                 'schema' => ['type' => 'integer'],
@@ -257,7 +257,7 @@ class DocumentationController extends Controller
                         'security' => [['bearerAuth' => []]],
                         'parameters' => [
                             [
-                                'name' => 'id',
+                                'name' => 'kategori',
                                 'in' => 'path',
                                 'required' => true,
                                 'schema' => ['type' => 'integer'],
@@ -287,7 +287,7 @@ class DocumentationController extends Controller
                         'security' => [['bearerAuth' => []]],
                         'parameters' => [
                             [
-                                'name' => 'id',
+                                'name' => 'kategori',
                                 'in' => 'path',
                                 'required' => true,
                                 'schema' => ['type' => 'integer'],

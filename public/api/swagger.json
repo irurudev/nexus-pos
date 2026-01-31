@@ -12,6 +12,199 @@
         }
     ],
     "paths": {
+        "/analytics/summary": {
+            "get": {
+                "tags": [
+                    "Analytics"
+                ],
+                "summary": "Ringkasan penjualan (total, pajak, diskon, laba)",
+                "operationId": "analyticsSummary",
+                "parameters": [
+                    {
+                        "name": "start_date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "example": "2025-01-01"
+                        }
+                    },
+                    {
+                        "name": "end_date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "example": "2025-01-31"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/analytics/top-kategori": {
+            "get": {
+                "tags": [
+                    "Analytics"
+                ],
+                "summary": "Top kategori berdasarkan qty terjual",
+                "operationId": "analyticsTopKategori",
+                "parameters": [
+                    {
+                        "name": "start_date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "example": "2025-01-01"
+                        }
+                    },
+                    {
+                        "name": "end_date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "example": "2025-01-31"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "example": 10
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/analytics/kasir-performance": {
+            "get": {
+                "tags": [
+                    "Analytics"
+                ],
+                "summary": "Performa kasir per bulan",
+                "operationId": "analyticsKasirPerformance",
+                "parameters": [
+                    {
+                        "name": "year",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "example": 2025
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/audit-logs": {
+            "get": {
+                "tags": [
+                    "AuditLogs"
+                ],
+                "summary": "Dapatkan audit logs (admin only)",
+                "operationId": "getAuditLogs",
+                "parameters": [
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "example": 20
+                        }
+                    },
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "auditable_type",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "example": "App\\\\Models\\\\Barang"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Pagination"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/login": {
             "post": {
                 "tags": [
@@ -523,7 +716,7 @@
                 ]
             }
         },
-        "/kategoris/{id}": {
+        "/kategoris/{kategori}": {
             "get": {
                 "tags": [
                     "Kategoris"
@@ -532,7 +725,7 @@
                 "operationId": "getKategoriDetail",
                 "parameters": [
                     {
-                        "name": "id",
+                        "name": "kategori",
                         "in": "path",
                         "description": "ID Kategori",
                         "required": true,
@@ -754,16 +947,16 @@
                 ]
             }
         },
-        "/pelanggans/{id}": {
+        "/pelanggans/{pelanggan}": {
             "get": {
                 "tags": [
                     "Pelanggans"
                 ],
                 "summary": "Get single pelanggan detail.",
-                "operationId": "7b2371a7b9603c7d9fbedf487d548631",
+                "operationId": "a34228f32979be24cde08c7d5cea1b0e",
                 "parameters": [
                     {
-                        "name": "id",
+                        "name": "pelanggan",
                         "in": "path",
                         "description": "ID pelanggan",
                         "required": true,
@@ -798,10 +991,10 @@
                     "Pelanggans"
                 ],
                 "summary": "Update pelanggan.",
-                "operationId": "a20887f89e4592f72b45d2bf5fa925c6",
+                "operationId": "57f6ac416a90de5133d7b36c34c7d1dd",
                 "parameters": [
                     {
-                        "name": "id",
+                        "name": "pelanggan",
                         "in": "path",
                         "description": "ID pelanggan",
                         "required": true,
@@ -864,10 +1057,10 @@
                     "Pelanggans"
                 ],
                 "summary": "Delete pelanggan.",
-                "operationId": "f0dbebfec70c46b97e6e946a382fd105",
+                "operationId": "53cadc43da8bc8d690b0a54fd05acf08",
                 "parameters": [
                     {
-                        "name": "id",
+                        "name": "pelanggan",
                         "in": "path",
                         "description": "ID pelanggan",
                         "required": true,
@@ -997,7 +1190,7 @@
                 ]
             }
         },
-        "/penjualans/{id_nota}": {
+        "/penjualans/{penjualan}": {
             "get": {
                 "tags": [
                     "Penjualans"
@@ -1006,7 +1199,7 @@
                 "operationId": "getPenjualanDetail",
                 "parameters": [
                     {
-                        "name": "id_nota",
+                        "name": "penjualan",
                         "in": "path",
                         "required": true,
                         "schema": {
@@ -1494,6 +1687,14 @@
         {
             "name": "Penjualans",
             "description": "Transaksi penjualan"
+        },
+        {
+            "name": "Analytics",
+            "description": "Laporan dan statistik"
+        },
+        {
+            "name": "AuditLogs",
+            "description": "AuditLogs"
         }
     ]
 }
