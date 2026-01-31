@@ -54,17 +54,28 @@ it('logout revokes token (token row removed)', function () {
     $this->assertDatabaseMissing('personal_access_tokens', ['tokenable_id' => $user->id, 'name' => 'test-token']);
 });
 
-it('me returns user data when authenticated and 401 for invalid token', function () {
+it('me returns user data when authenticated', function () {
     $user = User::factory()->create();
-    $token = $user->createToken('t')->plainTextToken;
+    $accessToken = $user->createToken('t');
+    $token = $accessToken->plainTextToken;
 
     $res = $this->withHeader('Authorization', 'Bearer '.$token)->getJson('/api/me');
     $res->assertStatus(200)->assertJsonFragment(['email' => $user->email]);
+});
 
-    // clear session and cookies in test client to avoid session persistence between requests
+it('me returns 401 for invalid token', function () {
+    $user = User::factory()->create();
+    $accessToken = $user->createToken('t');
+    $token = $accessToken->plainTextToken;
+
+    // ensure token exists then delete it directly to simulate invalidation
+    $this->assertDatabaseHas('personal_access_tokens', ['name' => 't']);
+    $accessToken->accessToken->delete();
+    $this->assertDatabaseMissing('personal_access_tokens', ['name' => 't']);
+
+    // clear session to avoid cookie-based auth interfering
     $this->app['session']->flush();
 
-    // send an explicitly invalid bearer token to ensure 401
-    $unauth = $this->withHeader('Authorization', 'Bearer invalid-token')->getJson('/api/me');
+    $unauth = $this->withHeader('Authorization', 'Bearer '.$token)->getJson('/api/me');
     $unauth->assertStatus(401);
 });
