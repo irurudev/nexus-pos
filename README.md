@@ -6,12 +6,12 @@ This README is the canonical documentation entry for the backend (the `be/` fold
 
 ## Quick links (backend docs)
 
-- **`be/POS_API_DOCUMENTATION.md`** — Complete API reference: endpoints, examples, test instructions, and local run / seeding steps.
-- **`be/SWAGGER_DOCUMENTATION.md`** — How to use the generated Swagger UI & OpenAPI JSON.
-- **`be/DATABASE_STRUCTURE.md`** — Database schema & audit log (`audit_logs`) description.
-- **`be/ACCESS_CONTROL.md`** — RBAC & audit policies (admin-only audit viewer, audit format).
-- **`be/FOLDER_STRUCTURE.md`** — Backend folder layout and where to find controllers, models, requests, etc.
-- **`be/public/api/swagger.json`** — Generated OpenAPI JSON (regenerate with `php artisan l5-swagger:generate`).
+- **`README/POS_API_DOCUMENTATION.md`** — Complete API reference: endpoints, examples, test instructions, and local run / seeding steps.
+- **`README/SWAGGER_DOCUMENTATION.md`** — How to use the generated Swagger UI & OpenAPI JSON.
+- **`README/DATABASE_STRUCTURE.md`** — Database schema & audit log (`audit_logs`) description.
+- **`README/ACCESS_CONTROL.md`** — RBAC & audit policies (admin-only audit viewer, audit format).
+- **`README/FOLDER_STRUCTURE.md`** — Backend folder layout and where to find controllers, models, requests, etc.
+- **`public/api/swagger.json`** — Generated OpenAPI JSON (regenerate with `php artisan l5-swagger:generate`).
 
 ---
 
