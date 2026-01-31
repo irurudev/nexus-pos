@@ -357,15 +357,23 @@ Content-Type: application/json
 
 ## 🚀 How to Test
 
-### 1. Start Backend Container
+### 1. Prepare Local Backend (Laravel / Linux)
 ```bash
-cd /home/rul/Podman/3private/test-case/pt-unggul-mitra-solusi
-podman-compose -f podman/docker-compose.yml up -d
-```
+cd /home/rul/Podman/3private/test-case/pt-unggul-mitra-solusi/be
 
-### 2. Run Migrations & Seed
-```bash
-podman exec pt-unggul-backend php artisan migrate:refresh --seed --force
+# copy .env and update DB credentials
+cp .env.example .env
+# edit .env to set DB_* variables
+
+# install dependencies
+composer install
+
+# generate key and migrate
+php artisan key:generate
+php artisan migrate --seed
+
+# serve locally
+php artisan serve --host=0.0.0.0 --port=8000
 ```
 
 ### 3. Test Login with Postman/cURL
