@@ -42,14 +42,16 @@ php artisan serve --host=0.0.0.0 --port=8000
 - `penjualan`: `id_nota`, `tgl`, `kode_pelanggan`, `subtotal`
 - `item_penjualan`: `nota`, `kode_barang`, `qty`
 
-## Database Structure (after)
-- `users`: `id`, `name`, `username`, `password`, `role (admin|cashier)`, `is_active`
-- `categories`: `id`, `name`, timestamps, `deleted_at`
-- `products`: `kode_barang` (PK), `category_id`, `name`, `purchase_price`, `sale_price`, `stock`, `deleted_at`
-- `customers`: `id_pelanggan`, `name`, `address`, `gender`, `points`
-- `sales`: `id_nota`, `date`, `customer_code`, `user_id`, `subtotal`, `discount`, `tax`, `total`
-- `sale_items`: `id`, `nota`, `product_code`, `product_name_snapshot`, `qty`, `unit_price`, `amount`
-- `audit_logs`: `id`, `user_id`, `action`, `auditable_type`, `auditable_id`, `old_values`, `new_values`, `ip_address`, `user_agent`, `url`
+## Database Structure (as defined in migrations)
+- `users`: `id`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`
+- `kategoris`: `id`, `nama_kategori`, `created_at`, `updated_at`, `deleted_at`
+- `barangs`: `kode_barang` (PK), `kategori_id` (FK → `kategoris.id`), `nama`, `harga_beli`, `harga_jual`, `stok`, `created_at`, `updated_at`, `deleted_at`
+- `pelanggans`: `id_pelanggan` (PK), `nama`, `domisili`, `jenis_kelamin` (`PRIA|WANITA`), `poin`, `created_at`, `updated_at`, `deleted_at`
+- `penjualans`: `id_nota` (PK), `tgl`, `kode_pelanggan` (nullable, FK → `pelanggans.id_pelanggan`), `user_id` (FK → `users.id`), `subtotal`, `diskon`, `pajak`, `total_akhir`, `created_at`, `updated_at`, `deleted_at`
+- `item_penjualans`: `id`, `nota` (FK → `penjualans.id_nota`), `kode_barang` (FK → `barangs.kode_barang`), `qty`, `harga_satuan`, `jumlah`, `created_at`, `updated_at`, `deleted_at`
+- `audit_logs`: `id`, `user_id` (nullable), `action` (`create|update|delete`), `auditable_type`, `auditable_id` (nullable), `old_values` (json), `new_values` (json), `ip_address`, `user_agent`, `url`, `created_at`, `updated_at`
+
+*Note: this list follows the actual column names in the migrations; use these exact names when referencing the database.*
 
 ---
 
@@ -89,4 +91,3 @@ php artisan serve --host=0.0.0.0 --port=8000
 ## Where to find more
 - Swagger UI & Spec: `README/SWAGGER.md` and `public/api/swagger.json`
 - Tests: `tests/` (`Feature` and `Unit`)
-- Docker/Podman setup: `podman/docker-compose.yml` and `podman/backend/Dockerfile`
