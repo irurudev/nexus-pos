@@ -1,9 +1,8 @@
 <?php
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-uses(TestCase::class, RefreshDatabase::class);
+uses(\Tests\TestCase::class, RefreshDatabase::class);
 
 it('increments sequence and returns consecutive values', function () {
     $first = \App\Models\Sequence::next('test_seq');

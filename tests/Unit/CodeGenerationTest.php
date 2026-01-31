@@ -1,9 +1,8 @@
 <?php
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-uses(TestCase::class, RefreshDatabase::class);
+uses(\Tests\TestCase::class, RefreshDatabase::class);
 
 it('generates BRG### sequence for Barang', function () {
     $code1 = \App\Models\Barang::generateKode();

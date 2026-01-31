@@ -4,9 +4,8 @@ use App\Models\Barang;
 use App\Models\Sequence;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
-use Tests\TestCase;
 
-uses(TestCase::class, RefreshDatabase::class);
+uses(\Tests\TestCase::class, RefreshDatabase::class);
 
 it('continues sequence beyond 999 without collision', function () {
     // Seed sequence with 999

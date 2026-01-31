@@ -87,7 +87,7 @@ it('allows admin to delete barang via API', function () {
     $response = $this->actingAs($admin, 'sanctum')->deleteJson('/api/barangs/'.$kode);
 
     $response->assertStatus(200);
-    $this->assertDatabaseMissing('barangs', ['kode_barang' => $kode]);
+    $this->assertSoftDeleted('barangs', ['kode_barang' => $kode]);
 });
 
 it('prevents non-admin from deleting barang', function () {

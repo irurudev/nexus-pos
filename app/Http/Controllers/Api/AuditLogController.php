@@ -24,10 +24,10 @@ class AuditLogController extends BaseController
      */
     public function index(Request $request)
     {
-        try {
-            // Only admin can view audit logs
-            $this->authorize('viewAny', AuditLog::class);
+        // Only admin can view audit logs - let AuthorizationException bubble up to return 403
+        $this->authorize('viewAny', AuditLog::class);
 
+        try {
             $perPage = $request->get('per_page', 20);
             $query = AuditLog::query()->with('user');
 

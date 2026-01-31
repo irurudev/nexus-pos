@@ -1,10 +1,5 @@
 <?php
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-
-uses(TestCase::class, RefreshDatabase::class);
-
 it('allows admin to create kategori via API', function () {
     $admin = \App\Models\User::factory()->create(['role' => 'admin']);
 

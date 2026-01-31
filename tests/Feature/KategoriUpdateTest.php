@@ -1,11 +1,7 @@
 <?php
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\Kategori;
 use App\Models\User;
-
-uses(TestCase::class, RefreshDatabase::class);
 
 it('allows admin to update kategori via API', function () {
     $admin = User::factory()->create(['role' => 'admin']);

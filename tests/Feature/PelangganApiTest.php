@@ -85,7 +85,7 @@ it('allows admin to delete pelanggan via API', function () {
     $response = $this->actingAs($admin, 'sanctum')->deleteJson('/api/pelanggans/'.$kode);
 
     $response->assertStatus(200);
-    $this->assertDatabaseMissing('pelanggans', ['id_pelanggan' => $kode]);
+    $this->assertSoftDeleted('pelanggans', ['id_pelanggan' => $kode]);
 });
 
 it('prevents non-admin from deleting pelanggan', function () {
