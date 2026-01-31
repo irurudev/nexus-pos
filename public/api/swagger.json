@@ -1,0 +1,1499 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "POS API",
+        "description": "REST API untuk Sistem Point of Sale (POS)",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8303/api",
+            "description": "Development Server"
+        }
+    ],
+    "paths": {
+        "/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Login dengan email dan password",
+                "description": "Endpoint untuk login dan mendapatkan Bearer token",
+                "operationId": "login",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "admin@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login berhasil",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Login berhasil"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "user": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer",
+                                                            "example": 1
+                                                        },
+                                                        "name": {
+                                                            "type": "string",
+                                                            "example": "Admin POS"
+                                                        },
+                                                        "email": {
+                                                            "type": "string",
+                                                            "example": "admin@example.com"
+                                                        },
+                                                        "role": {
+                                                            "type": "string",
+                                                            "enum": [
+                                                                "admin",
+                                                                "kasir"
+                                                            ],
+                                                            "example": "admin"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "token": {
+                                                    "type": "string",
+                                                    "example": "1|xxxxxxxxxxxxxxxxxxxxxxxx"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Email atau password salah"
+                    },
+                    "500": {
+                        "description": "Kesalahan server"
+                    }
+                }
+            }
+        },
+        "/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Logout user",
+                "operationId": "logout",
+                "responses": {
+                    "200": {
+                        "description": "Logout berhasil"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/me": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Dapatkan data user yang sedang login",
+                "operationId": "getCurrentUser",
+                "responses": {
+                    "200": {
+                        "description": "Data user berhasil diambil",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/barangs": {
+            "get": {
+                "tags": [
+                    "Barangs"
+                ],
+                "summary": "Dapatkan semua barang (pagination)",
+                "operationId": "getBarangs",
+                "parameters": [
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 15
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "example": "beras"
+                        }
+                    },
+                    {
+                        "name": "kategori_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Pagination"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Barangs"
+                ],
+                "summary": "Buat barang baru",
+                "operationId": "createBarang",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/BarangCreate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "422": {
+                        "description": "Validation Error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/barangs/{kode_barang}": {
+            "get": {
+                "tags": [
+                    "Barangs"
+                ],
+                "summary": "Dapatkan detail barang",
+                "operationId": "getBarangDetail",
+                "parameters": [
+                    {
+                        "name": "kode_barang",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "BRG001"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Barangs"
+                ],
+                "summary": "Update barang",
+                "operationId": "updateBarang",
+                "parameters": [
+                    {
+                        "name": "kode_barang",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "BRG001"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "kategori_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "nama": {
+                                        "type": "string",
+                                        "example": "Beras 10kg"
+                                    },
+                                    "harga_beli": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 60000
+                                    },
+                                    "harga_jual": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 75000
+                                    },
+                                    "stok": {
+                                        "type": "integer",
+                                        "example": 20
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Barangs"
+                ],
+                "summary": "Hapus barang",
+                "operationId": "deleteBarang",
+                "parameters": [
+                    {
+                        "name": "kode_barang",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "BRG001"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/kategoris": {
+            "get": {
+                "tags": [
+                    "Kategoris"
+                ],
+                "summary": "Dapatkan semua kategori",
+                "operationId": "getKategoris",
+                "responses": {
+                    "200": {
+                        "description": "Data kategori berhasil diambil",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Data kategori berhasil diambil"
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id_kategori": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "nama_kategori": {
+                                                        "type": "string",
+                                                        "example": "Sembako"
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2025-01-01T00:00:00Z"
+                                                    },
+                                                    "updated_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2025-01-01T00:00:00Z"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Kategoris"
+                ],
+                "summary": "Buat kategori baru",
+                "operationId": "createKategori",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nama_kategori"
+                                ],
+                                "properties": {
+                                    "nama_kategori": {
+                                        "type": "string",
+                                        "example": "Sembako"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Kategori berhasil dibuat",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "422": {
+                        "description": "Validation Error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/kategoris/{id}": {
+            "get": {
+                "tags": [
+                    "Kategoris"
+                ],
+                "summary": "Dapatkan detail kategori beserta barangnya",
+                "operationId": "getKategoriDetail",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID Kategori",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Data kategori berhasil diambil",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Kategori tidak ditemukan",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Kategoris"
+                ],
+                "summary": "Update kategori",
+                "operationId": "updateKategori",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nama_kategori"
+                                ],
+                                "properties": {
+                                    "nama_kategori": {
+                                        "type": "string",
+                                        "example": "Sembako"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Kategori berhasil diperbarui",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "422": {
+                        "description": "Validation Error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Kategoris"
+                ],
+                "summary": "Hapus kategori",
+                "operationId": "deleteKategori",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Kategori berhasil dihapus",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponse"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/pelanggans": {
+            "get": {
+                "tags": [
+                    "Pelanggans"
+                ],
+                "summary": "Get all pelanggan with pagination.",
+                "operationId": "99125c2c4f14377d85456baa7be87c80",
+                "parameters": [
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Pagination"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Pelanggans"
+                ],
+                "summary": "Create new pelanggan.",
+                "operationId": "9bbaf5f4a0dc1e778507adae6910185c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PelangganCreate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/pelanggans/{id}": {
+            "get": {
+                "tags": [
+                    "Pelanggans"
+                ],
+                "summary": "Get single pelanggan detail.",
+                "operationId": "7b2371a7b9603c7d9fbedf487d548631",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID pelanggan",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Pelanggans"
+                ],
+                "summary": "Update pelanggan.",
+                "operationId": "a20887f89e4592f72b45d2bf5fa925c6",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID pelanggan",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nama": {
+                                        "type": "string"
+                                    },
+                                    "domisili": {
+                                        "type": "string"
+                                    },
+                                    "jenis_kelamin": {
+                                        "type": "string",
+                                        "enum": [
+                                            "PRIA",
+                                            "WANITA"
+                                        ]
+                                    },
+                                    "poin": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Pelanggans"
+                ],
+                "summary": "Delete pelanggan.",
+                "operationId": "f0dbebfec70c46b97e6e946a382fd105",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID pelanggan",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/penjualans": {
+            "get": {
+                "tags": [
+                    "Penjualans"
+                ],
+                "summary": "Dapatkan semua penjualan (filter & pagination)",
+                "operationId": "getPenjualans",
+                "parameters": [
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "example": 15
+                        }
+                    },
+                    {
+                        "name": "start_date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "example": "2025-01-01"
+                        }
+                    },
+                    {
+                        "name": "end_date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "example": "2025-01-31"
+                        }
+                    },
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Pagination"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Penjualans"
+                ],
+                "summary": "Buat transaksi penjualan",
+                "operationId": "createPenjualan",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PenjualanCreate"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Penjualan berhasil dibuat",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/penjualans/{id_nota}": {
+            "get": {
+                "tags": [
+                    "Penjualans"
+                ],
+                "summary": "Dapatkan detail penjualan",
+                "operationId": "getPenjualanDetail",
+                "parameters": [
+                    {
+                        "name": "id_nota",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "INV-20250101-0001"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ApiResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/penjualans/summary": {
+            "get": {
+                "tags": [
+                    "Penjualans"
+                ],
+                "summary": "Dapatkan rangkuman penjualan (summary)",
+                "operationId": "getPenjualanSummary",
+                "parameters": [
+                    {
+                        "name": "start_date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "example": "2025-01-01"
+                        }
+                    },
+                    {
+                        "name": "end_date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "example": "2025-01-31"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Summary data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "periode": {
+                                            "properties": {
+                                                "start_date": {
+                                                    "type": "string"
+                                                },
+                                                "end_date": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "total_penjualan": {
+                                            "type": "number"
+                                        },
+                                        "total_diskon": {
+                                            "type": "number"
+                                        },
+                                        "total_pajak": {
+                                            "type": "number"
+                                        },
+                                        "total_laba": {
+                                            "type": "number"
+                                        },
+                                        "jumlah_transaksi": {
+                                            "type": "integer"
+                                        },
+                                        "rata_rata_transaksi": {
+                                            "type": "number"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Barang": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Pagination"
+                    },
+                    {
+                        "properties": {
+                            "kode_barang": {
+                                "type": "string",
+                                "example": "BRG001"
+                            },
+                            "kategori_id": {
+                                "type": "integer",
+                                "example": 1
+                            },
+                            "nama": {
+                                "type": "string",
+                                "example": "Beras 5kg"
+                            },
+                            "harga_beli": {
+                                "type": "number",
+                                "format": "float",
+                                "example": 50000
+                            },
+                            "harga_jual": {
+                                "type": "number",
+                                "format": "float",
+                                "example": 65000
+                            },
+                            "stok": {
+                                "type": "integer",
+                                "example": 10
+                            },
+                            "kategori": {
+                                "type": "object"
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
+            "BarangCreate": {
+                "required": [
+                    "kategori_id",
+                    "nama",
+                    "harga_beli",
+                    "harga_jual",
+                    "stok"
+                ],
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Pagination"
+                    },
+                    {
+                        "properties": {
+                            "kode_barang": {
+                                "description": "Optional. Jika tidak diisi, sistem akan mengenerate otomatis (prefix BRG + 3 angka).",
+                                "type": "string",
+                                "example": "BRG123"
+                            },
+                            "kategori_id": {
+                                "type": "integer",
+                                "example": 1
+                            },
+                            "nama": {
+                                "type": "string",
+                                "example": "Beras 5kg"
+                            },
+                            "harga_beli": {
+                                "type": "number",
+                                "format": "float",
+                                "example": 50000
+                            },
+                            "harga_jual": {
+                                "type": "number",
+                                "format": "float",
+                                "example": 65000
+                            },
+                            "stok": {
+                                "type": "integer",
+                                "example": 10
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
+            "Pelanggan": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Pagination"
+                    },
+                    {
+                        "properties": {
+                            "id_pelanggan": {
+                                "type": "string",
+                                "example": "PGN123"
+                            },
+                            "nama": {
+                                "type": "string",
+                                "example": "John Doe"
+                            },
+                            "domisili": {
+                                "type": "string",
+                                "example": "Jakarta"
+                            },
+                            "jenis_kelamin": {
+                                "type": "string",
+                                "enum": [
+                                    "PRIA",
+                                    "WANITA"
+                                ],
+                                "example": "PRIA"
+                            },
+                            "poin": {
+                                "type": "integer",
+                                "example": 0
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
+            "PelangganCreate": {
+                "required": [
+                    "nama",
+                    "jenis_kelamin"
+                ],
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Pagination"
+                    },
+                    {
+                        "properties": {
+                            "id_pelanggan": {
+                                "type": "string",
+                                "example": "PGN123"
+                            },
+                            "nama": {
+                                "type": "string",
+                                "example": "John Doe"
+                            },
+                            "domisili": {
+                                "type": "string",
+                                "example": "Jakarta"
+                            },
+                            "jenis_kelamin": {
+                                "type": "string",
+                                "enum": [
+                                    "PRIA",
+                                    "WANITA"
+                                ],
+                                "example": "PRIA"
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
+            "ItemPenjualan": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Pagination"
+                    },
+                    {
+                        "properties": {
+                            "kode_barang": {
+                                "type": "string",
+                                "example": "BRG001"
+                            },
+                            "qty": {
+                                "type": "integer",
+                                "example": 2
+                            },
+                            "harga_satuan": {
+                                "type": "number",
+                                "format": "float",
+                                "example": 15000
+                            },
+                            "jumlah": {
+                                "type": "number",
+                                "format": "float",
+                                "example": 30000
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
+            "PenjualanCreate": {
+                "required": [
+                    "id_nota",
+                    "tgl",
+                    "items"
+                ],
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Pagination"
+                    },
+                    {
+                        "properties": {
+                            "id_nota": {
+                                "type": "string",
+                                "example": "INV-20250101-0001"
+                            },
+                            "tgl": {
+                                "type": "string",
+                                "format": "date-time",
+                                "example": "2025-01-01 10:00:00"
+                            },
+                            "kode_pelanggan": {
+                                "type": "string",
+                                "example": "PLG001",
+                                "nullable": true
+                            },
+                            "diskon": {
+                                "type": "number",
+                                "example": 0
+                            },
+                            "pajak": {
+                                "type": "number",
+                                "example": 0
+                            },
+                            "items": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/ItemPenjualan"
+                                }
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
+            "Penjualan": {
+                "type": "object",
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Pagination"
+                    },
+                    {
+                        "properties": {
+                            "id_nota": {
+                                "type": "string"
+                            },
+                            "tgl": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "kode_pelanggan": {
+                                "type": "string",
+                                "nullable": true
+                            },
+                            "user_id": {
+                                "type": "integer"
+                            },
+                            "subtotal": {
+                                "type": "number"
+                            },
+                            "diskon": {
+                                "type": "number"
+                            },
+                            "pajak": {
+                                "type": "number"
+                            },
+                            "total_akhir": {
+                                "type": "number"
+                            },
+                            "items": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/ItemPenjualan"
+                                }
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
+            "ApiResponse": {
+                "properties": {
+                    "success": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "data": {
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "Pagination": {
+                "properties": {
+                    "current_page": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "data": {
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        }
+                    },
+                    "first_page_url": {
+                        "type": "string"
+                    },
+                    "from": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "last_page": {
+                        "type": "integer"
+                    },
+                    "last_page_url": {
+                        "type": "string"
+                    },
+                    "next_page_url": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "path": {
+                        "type": "string"
+                    },
+                    "per_page": {
+                        "type": "integer"
+                    },
+                    "prev_page_url": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "to": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "total": {
+                        "type": "integer"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Auth",
+            "description": "Endpoint autentikasi"
+        },
+        {
+            "name": "Kategoris",
+            "description": "Manajemen kategori"
+        },
+        {
+            "name": "Barangs",
+            "description": "Operasi CRUD untuk barang"
+        },
+        {
+            "name": "Pelanggans",
+            "description": "Manajemen pelanggan"
+        },
+        {
+            "name": "Penjualans",
+            "description": "Transaksi penjualan"
+        }
+    ]
+}

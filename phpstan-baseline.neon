@@ -1,0 +1,217 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Call to an undefined static method App\\Models\\Barang\:\:where\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Actions/Penjualan/CreatePenjualanAction.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\Penjualan\:\:create\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Actions/Penjualan/CreatePenjualanAction.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Requests\\Auth\\LoginRequest\:\:\$email\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Http/Controllers/Api/AuthController.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Requests\\Auth\\LoginRequest\:\:\$password\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/Api/AuthController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Contracts\\Auth\\Factory\:\:user\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: app/Http/Controllers/Api/AuthController.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\User\:\:where\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Http/Controllers/Api/AuthController.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\Barang\:\:create\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Http/Controllers/Api/BarangController.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\Barang\:\:find\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 2
+			path: app/Http/Controllers/Api/BarangController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Contracts\\Auth\\Factory\:\:user\(\)\.$#'
+			identifier: method.notFound
+			count: 3
+			path: app/Http/Controllers/Api/KategoriController.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\Kategori\:\:create\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Http/Controllers/Api/KategoriController.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\Kategori\:\:find\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 2
+			path: app/Http/Controllers/Api/KategoriController.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\Pelanggan\:\:create\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Http/Controllers/Api/PelangganController.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\Pelanggan\:\:find\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 3
+			path: app/Http/Controllers/Api/PelangganController.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Contracts\\Auth\\Factory\:\:id\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Http/Controllers/Api/PenjualanController.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\Penjualan\:\:whereBetween\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Http/Controllers/Api/PenjualanController.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\Barang\:\:find\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Http/Requests/Barang/DestroyBarangRequest.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\Barang\:\:find\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Http/Requests/Barang/UpdateBarangRequest.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\Pelanggan\:\:find\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Http/Requests/Pelanggan/DestroyPelangganRequest.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\Pelanggan\:\:find\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Http/Requests/Pelanggan/UpdatePelangganRequest.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Contracts\\Auth\\Factory\:\:check\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Http/Requests/Penjualan/StorePenjualanRequest.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Kategori\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/Kategori.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\User\:\:\$role\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Policies/BarangPolicy.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\User\:\:\$role\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Policies/PelangganPolicy.php
+
+		-
+			message: '#^Call to an undefined method PHPUnit\\Framework\\TestCase\:\:actingAs\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: tests/Feature/BarangApiTest.php
+
+		-
+			message: '#^Call to an undefined method PHPUnit\\Framework\\TestCase\:\:assertDatabaseHas\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: tests/Feature/BarangApiTest.php
+
+		-
+			message: '#^Call to static method table\(\) on an unknown class DB\.$#'
+			identifier: class.notFound
+			count: 2
+			path: tests/Feature/BarangApiTest.php
+
+		-
+			message: '#^Call to an undefined method PHPUnit\\Framework\\TestCase\:\:get\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: tests/Feature/ExampleTest.php
+
+		-
+			message: '#^Call to an undefined method PHPUnit\\Framework\\TestCase\:\:actingAs\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: tests/Feature/PelangganApiTest.php
+
+		-
+			message: '#^Call to an undefined method PHPUnit\\Framework\\TestCase\:\:assertDatabaseHas\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: tests/Feature/PelangganApiTest.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Penjualan\:\:\$itemPenjualans\.$#'
+			identifier: property.notFound
+			count: 1
+			path: tests/Feature/PenjualanFlowTest.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\User\|Illuminate\\Database\\Eloquent\\Collection\<int, App\\Models\\User\>\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: tests/Feature/PenjualanFlowTest.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\Barang\:\:create\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: tests/Feature/PenjualanFlowTest.php
+
+		-
+			message: '#^Call to an undefined static method App\\Models\\Pelanggan\:\:create\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: tests/Feature/PenjualanFlowTest.php
+
+		-
+			message: '#^Call to static method table\(\) on an unknown class DB\.$#'
+			identifier: class.notFound
+			count: 1
+			path: tests/Feature/PenjualanFlowTest.php
+
+		-
+			message: '#^Undefined variable\: \$this$#'
+			identifier: variable.undefined
+			count: 1
+			path: tests/Pest.php
+
+		-
+			message: '#^Call to static method table\(\) on an unknown class DB\.$#'
+			identifier: class.notFound
+			count: 1
+			path: tests/Unit/SequenceEdgeTest.php
