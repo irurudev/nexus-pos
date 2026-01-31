@@ -1,22 +1,22 @@
-# Implementasi & Dokumentasi Lengkap — POS API
+# Implementation & Documentation — POS API
 
-## Status: ✅ SELESAI
+## Status: ✅ COMPLETE
 
-Dokumentasi terpusat untuk implementasi backend (endpoints, database, folder structure, akses & kebijakan, quick start, dan note teknis).
+Centralized documentation for the backend implementation (endpoints, database, folder structure, access control, quick start, and technical notes).
 
 ---
 
-## Ringkasan Singkat
-- Backend: Laravel 12, MySQL, Sanctum authentication
-- 25+ API endpoints (Auth, Kategori, Barang, Pelanggan, Penjualan, Audit, Analytics)
-- Fitur utama: transaksi POS (multi-item), stok otomatis decrement, audit log, analytics (laba, top kategori, performa kasir)
+## Summary
+- Backend: Laravel 12, MySQL, Laravel Sanctum for authentication
+- 25+ API endpoints (Auth, Categories, Products, Customers, Sales, Audit, Analytics)
+- Key features: POS transactions (multi-item), automatic stock decrement, audit logs, analytics (profit, top categories, cashier performance)
 
 ---
 
 ## Quick Start
 ```bash
 cd be
-cp .env.example .env    # update DB_*
+cp .env.example .env    # update DB_* credentials
 composer install
 php artisan key:generate
 php artisan migrate --seed
@@ -26,57 +26,57 @@ php artisan serve --host=0.0.0.0 --port=8000
 
 ---
 
-## API Endpoints (Ringkasan)
+## API Endpoints (Overview)
 - Auth: `POST /api/login`, `POST /api/logout`, `GET /api/me`
-- Kategoris: CRUD
-- Barangs: CRUD (pagination, search, filter)
-- Pelanggans: CRUD
-- Penjualans: `GET /api/penjualans`, `POST /api/penjualans`, `GET /api/penjualans/{id}`, `GET /api/penjualans/summary`
-- Audit & Analytics: `GET /api/audit-logs` (admin), `GET /api/analytics/{summary,top-kategori,kasir-performance}`
+- Categories: CRUD
+- Products: CRUD (pagination, search, filter)
+- Customers: CRUD
+- Sales: `GET /api/penjualans`, `POST /api/penjualans`, `GET /api/penjualans/{id}`, `GET /api/penjualans/summary`
+- Audit & Analytics: `GET /api/audit-logs` (admin), `GET /api/analytics/{summary,top-category,cashier-performance}`
 
 ---
 
-## Database Structure (Ringkasan Tabel Penting)
-- `users`: `id`, `name`, `username`, `password`, `role (admin|kasir)`, `is_active`
-- `kategoris`: `id`, `nama_kategori`, timestamps, `deleted_at`
-- `barangs`: `kode_barang` (PK), `kategori_id`, `nama`, `harga_beli`, `harga_jual`, `stok`, `deleted_at`
-- `pelanggans`: `id_pelanggan`, `nama`, `domisili`, `jenis_kelamin`, `poin`
-- `penjualans`: `id_nota`, `tgl`, `kode_pelanggan`, `user_id`, `subtotal`, `diskon`, `pajak`, `total_akhir`
-- `item_penjualans`: `id`, `nota`, `kode_barang`, `nama_barang`, `qty`, `harga_satuan`, `jumlah`
+## Database Structure (Key Tables)
+- `users`: `id`, `name`, `username`, `password`, `role (admin|cashier)`, `is_active`
+- `categories`: `id`, `name`, timestamps, `deleted_at`
+- `products`: `kode_barang` (PK), `category_id`, `name`, `purchase_price`, `sale_price`, `stock`, `deleted_at`
+- `customers`: `id_pelanggan`, `name`, `address`, `gender`, `points`
+- `sales`: `id_nota`, `date`, `customer_code`, `user_id`, `subtotal`, `discount`, `tax`, `total`
+- `sale_items`: `id`, `nota`, `product_code`, `product_name_snapshot`, `qty`, `unit_price`, `amount`
 - `audit_logs`: `id`, `user_id`, `action`, `auditable_type`, `auditable_id`, `old_values`, `new_values`, `ip_address`, `user_agent`, `url`
 
 ---
 
 ## Folder Structure & Conventions
 - `app/Actions/` — Business logic (Action classes)
-- `app/DTOs/` — Data Transfer Objects (PenjualanData, ItemPenjualanData)
-- `app/Enums/` — Typed enums (UserRole, JenisKelamin)
-- `app/Http/Controllers/Api/` — API controllers (Swagger/OpenAPI attributes)
+- `app/DTOs/` — Data Transfer Objects (SaleData, SaleItemData)
+- `app/Enums/` — Typed enums (UserRole, Gender)
+- `app/Http/Controllers/Api/` — API controllers (with Swagger/OpenAPI attributes)
 - `app/Http/Requests/` — Form requests for validation
-- `app/Models/` — Eloquent models with relations
+- `app/Models/` — Eloquent models and relations
 - `app/Observers/` — Observers (AuditObserver)
 - `app/Policies/` — Authorization policies
 - `app/Services/` — External integrations
 
 ---
 
-## Analytics (Queries implemented)
-- Laba Bersih: `SUM((ip.harga_satuan - b.harga_beli) * ip.qty) as total_laba`
-- Top Kategori: `SUM(ip.qty)` grouped per kategori
-- Performa Kasir: `SUM(p.total_akhir)` dan `COUNT(*)` per `user_id` per bulan
+## Analytics (Implemented Queries)
+- Net Profit: `SUM((si.unit_price - p.purchase_price) * si.qty) as total_profit`
+- Top Categories: `SUM(si.qty)` grouped by category
+- Cashier Performance: `SUM(s.total)` and `COUNT(*)` per `user_id` per month
 
 ---
 
 ## Test Credentials (Seeder)
 - Admin: `username: admin`, `password: password`
-- Kasir: `username: kasir_fakhirul`, `password: password`
+- Cashier: `username: kasir_fakhirul`, `password: password`
 
 ---
 
 ## Notes & Recommendations
-- Enforcement of permissions should be server-side (Policies/Gates), not only client-side.
-- Use transactions for POST /penjualans to ensure data integrity (stock validation, rollback on error).
-- Keep Swagger annotations up-to-date and regenerate JSON when controllers change.
+- Enforce permissions server-side (Policies/Gates), not only on the client.
+- Use database transactions for `POST /penjualans` to ensure data integrity (stock validation, rollback on error).
+- Keep Swagger annotations up-to-date and regenerate the JSON spec after controller changes.
 
 ---
 
