@@ -37,10 +37,7 @@
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/"
-        },
-        "files": [
-            "tests/_ide_helpers.php"
-        ]
+        }
     },
     "scripts": {
         "setup": [
