@@ -30,6 +30,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setIsLoading(false);
   }, []);
 
+  // Listen for global unauthorized events from API client to clear auth state
+  useEffect(() => {
+    const onUnauthorized = (_e: Event) => {
+      setUser(null);
+      setToken(null);
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      // navigate to login as fallback
+      window.location.href = '/login';
+    };
+
+    window.addEventListener('auth:unauthorized', onUnauthorized as EventListener);
+    return () => window.removeEventListener('auth:unauthorized', onUnauthorized as EventListener);
+  }, []);
+
   const login = async (email: string, password: string) => {
     const response = await authAPI.login({ email, password });
     const { user: userData, token: userToken } = response.data;
