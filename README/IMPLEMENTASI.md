@@ -36,13 +36,13 @@ php artisan serve --host=0.0.0.0 --port=8000
 
 ---
 
-## Database Structure (Key Tables)
+## Database Structure (before)
 - `pelanggan`: `id_pelanggan`, `nama`, `domisili`, `jenis_kelamin`
 - `barang`: `kode`, `nama`, `kategori`, `harga`
 - `penjualan`: `id_nota`, `tgl`, `kode_pelanggan`, `subtotal`
 - `item_penjualan`: `nota`, `kode_barang`, `qty`
 
-## Database Structure (Key Tables)
+## Database Structure (after)
 - `users`: `id`, `name`, `username`, `password`, `role (admin|cashier)`, `is_active`
 - `categories`: `id`, `name`, timestamps, `deleted_at`
 - `products`: `kode_barang` (PK), `category_id`, `name`, `purchase_price`, `sale_price`, `stock`, `deleted_at`
