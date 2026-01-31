@@ -68,13 +68,6 @@ php artisan serve --host=0.0.0.0 --port=8000
 
 ---
 
-## Analytics (Implemented Queries)
-- Net Profit: `SUM((si.unit_price - p.purchase_price) * si.qty) as total_profit`
-- Top Categories: `SUM(si.qty)` grouped by category
-- Cashier Performance: `SUM(s.total)` and `COUNT(*)` per `user_id` per month
-
----
-
 ## Test Credentials (Seeder)
 - Admin: `username: admin`, `password: password`
 - Cashier: `username: kasir_fakhirul`, `password: password`
