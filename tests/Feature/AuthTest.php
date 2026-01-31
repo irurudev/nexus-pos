@@ -61,6 +61,7 @@ it('me returns user data when authenticated and 401 for invalid token', function
     $res = $this->withHeader('Authorization', 'Bearer '.$token)->getJson('/api/me');
     $res->assertStatus(200)->assertJsonFragment(['email' => $user->email]);
 
-    $unauth = $this->withoutHeader('Authorization')->getJson('/api/me');
+    // send an explicitly invalid bearer token to avoid session/header persistence in the test client
+    $unauth = $this->withHeader('Authorization', 'Bearer invalid-token')->getJson('/api/me');
     $unauth->assertStatus(401);
 });
