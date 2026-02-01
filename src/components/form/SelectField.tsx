@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useRef, useEffect } from 'react';
 import { Field, Select, Portal, createListCollection, Text } from '@chakra-ui/react';
 import { FiCheck } from 'react-icons/fi';
 
@@ -20,6 +20,33 @@ interface SelectFieldProps {
 export default function SelectField({ label, items, value, onChange, placeholder, required, disabled }: SelectFieldProps) {
   const collection = useMemo(() => createListCollection({ items }), [items]);
 
+  const posRef = useRef<HTMLDivElement | null>(null);
+
+  // Accessibility: some browsers warn when an ancestor has aria-hidden while a focused
+  // descendant remains focused. Observe the positioner and blur any focused element
+  // inside it when aria-hidden becomes "true" to avoid the warning.
+  useEffect(() => {
+    const el = posRef.current;
+    if (!el) return;
+
+    const obs = new MutationObserver((mutations) => {
+      for (const m of mutations) {
+        if (m.type === 'attributes' && m.attributeName === 'aria-hidden') {
+          const val = el.getAttribute('aria-hidden');
+          if (val === 'true') {
+            const active = document.activeElement as HTMLElement | null;
+            if (active && el.contains(active)) {
+              try { active.blur(); } catch (err) { /* ignore */ }
+            }
+          }
+        }
+      }
+    });
+
+    obs.observe(el, { attributes: true });
+    return () => obs.disconnect();
+  }, []);
+
   return (
     <Field.Root required={required}>
       <Field.Label color="gray.900">{label}</Field.Label>
@@ -37,7 +64,7 @@ export default function SelectField({ label, items, value, onChange, placeholder
         </Select.Control>
 
         <Portal>
-          <Select.Positioner>
+          <Select.Positioner ref={posRef}>
             <Select.Content zIndex="overlay">
               {collection.items.map((it) => (
                 <Select.Item key={it.value} item={it} _hover={{ bg: 'gray.50' }} _focus={{ bg: 'gray.50' }} px={3} py={2}>
