@@ -73,6 +73,7 @@ class PenjualanController extends BaseController
      *     @OA\Parameter(name="start_date", in="query", @OA\Schema(type="string", format="date", example="2025-01-01")),
      *     @OA\Parameter(name="end_date", in="query", @OA\Schema(type="string", format="date", example="2025-01-31")),
      *     @OA\Parameter(name="user_id", in="query", @OA\Schema(type="integer", example=1)),
+     *     @OA\Parameter(name="search", in="query", @OA\Schema(type="string", example="INV-20250101")),
      *
      *     @OA\Response(
      *         response=200,
@@ -107,6 +108,20 @@ class PenjualanController extends BaseController
 
             if ($user_id) {
                 $query->where('user_id', $user_id);
+            }
+
+            $search = $request->get('search');
+            if ($search) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('id_nota', 'like', "%{$search}%")
+                      ->orWhere('total_akhir', 'like', "%{$search}%")
+                      ->orWhereHas('pelanggan', function ($qq) use ($search) {
+                          $qq->where('nama', 'like', "%{$search}%");
+                      })
+                      ->orWhereHas('itemPenjualans', function ($qq) use ($search) {
+                          $qq->where('nama_barang', 'like', "%{$search}%");
+                      });
+                });
             }
 
             $penjualans = $query->latest('tgl')->paginate($perPage);
