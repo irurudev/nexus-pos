@@ -41,15 +41,12 @@ export default function KategoriPage() {
     fetchKategoris();
   }, [page]);
 
-  useEffect(() => {
-    console.log('kategoris state updated:', kategoris);
-  }, [kategoris]);
+
 
   const fetchKategoris = async () => {
     try {
       setIsLoading(true);
       const response = await kategoriAPI.getAll({ per_page: pageSize, page });
-      console.log('fetched kategoriRes:', response);
 
       // PaginatedResponse<T> -> response.data is the items array
       const items: Kategori[] = response.data ?? [];

@@ -52,9 +52,7 @@ export default function BarangPage() {
     setPage(1);
   }, [searchTerm]);
 
-  useEffect(() => {
-    console.log('barangs state updated:', barangs);
-  }, [barangs]);
+
 
   const fetchData = async () => {
     try {
@@ -64,8 +62,6 @@ export default function BarangPage() {
         barangAPI.getAll({ per_page: pageSize, page, search: searchTerm }),
         kategoriAPI.getAll({ per_page: 1000 }),
       ]);
-      console.log('fetched barangRes:', barangRes);
-      console.log('fetched kategoriRes:', kategoriRes);
 
       // PaginatedResponse<T> -> response.data is items array
       const items: Barang[] = barangRes.data ?? [];

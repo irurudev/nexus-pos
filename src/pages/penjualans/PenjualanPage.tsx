@@ -70,9 +70,6 @@ export default function PenjualanPage() {
         barangAPI.getAll({ per_page: 1000 }),
         pelangganAPI.getAll({ per_page: 1000 }),
       ]);
-      console.log('fetched penjualanRes:', penjualanRes);
-      console.log('fetched barangRes:', barangRes);
-      console.log('fetched pelangganRes:', pelangganRes);
 
       const items: PenjualanType[] = penjualanRes.data ?? [];
       setPenjualans(items);
@@ -98,7 +95,6 @@ export default function PenjualanPage() {
   };
 
   useEffect(() => {
-    console.log('penjualans state updated:', penjualans);
     setPage(1);
   }, [penjualans]);
 
