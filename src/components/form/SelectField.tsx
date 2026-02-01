@@ -29,22 +29,43 @@ export default function SelectField({ label, items, value, onChange, placeholder
     const el = posRef.current;
     if (!el) return;
 
+    const blurIfHidden = () => {
+      const isHidden = el.getAttribute('aria-hidden') === 'true' || el.getAttribute('data-aria-hidden') === 'true';
+      if (isHidden) {
+        const active = document.activeElement as HTMLElement | null;
+        if (active && el.contains(active)) {
+          try { active.blur(); } catch (err) { /* ignore */ }
+        }
+      }
+    };
+
+    // Observe both aria-hidden and data-aria-hidden changes
     const obs = new MutationObserver((mutations) => {
       for (const m of mutations) {
-        if (m.type === 'attributes' && m.attributeName === 'aria-hidden') {
-          const val = el.getAttribute('aria-hidden');
-          if (val === 'true') {
-            const active = document.activeElement as HTMLElement | null;
-            if (active && el.contains(active)) {
-              try { active.blur(); } catch (err) { /* ignore */ }
-            }
-          }
+        if (m.type === 'attributes' && (m.attributeName === 'aria-hidden' || m.attributeName === 'data-aria-hidden')) {
+          blurIfHidden();
         }
       }
     });
 
-    obs.observe(el, { attributes: true });
-    return () => obs.disconnect();
+    obs.observe(el, { attributes: true, attributeFilter: ['aria-hidden', 'data-aria-hidden'] });
+
+    // Also handle the case where focus lands inside a hidden positioner (focusin)
+    const onFocusIn = (ev: FocusEvent) => {
+      const target = ev.target as HTMLElement | null;
+      if (!target) return;
+      const isHidden = el.getAttribute('aria-hidden') === 'true' || el.getAttribute('data-aria-hidden') === 'true';
+      if (isHidden && el.contains(target)) {
+        try { (target as HTMLElement).blur(); } catch (err) { /* ignore */ }
+      }
+    };
+
+    document.addEventListener('focusin', onFocusIn);
+
+    return () => {
+      obs.disconnect();
+      document.removeEventListener('focusin', onFocusIn);
+    };
   }, []);
 
   return (
