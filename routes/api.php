@@ -28,6 +28,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/penjualans/summary', [PenjualanController::class, 'summary']);
     Route::get('/audit-logs', [AuditLogController::class, 'index']);
 
+    // User management (admin only)
+    Route::apiResource('users', \App\Http\Controllers\Api\UserController::class);
+
     // Analytics routes
     Route::get('/analytics/summary', [AnalyticsController::class, 'summary']);
     Route::get('/analytics/top-kategori', [AnalyticsController::class, 'topKategori']);
