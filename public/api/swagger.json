@@ -1132,6 +1132,14 @@
                             "type": "integer",
                             "example": 1
                         }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "example": "INV-20250101"
+                        }
                     }
                 ],
                 "responses": {
