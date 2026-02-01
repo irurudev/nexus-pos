@@ -29,13 +29,14 @@ it('rejects invalid password', function () {
     $response->assertStatus(401);
 });
 
-it('rejects inactive user', function () {
+it('rejects inactive user with clear message', function () {
     $pw = 'inactivepw';
     $user = User::factory()->create(['password' => Hash::make($pw), 'is_active' => false]);
 
     $response = $this->postJson('/api/login', ['email' => $user->email, 'password' => $pw]);
 
-    $response->assertStatus(401);
+    $response->assertStatus(403);
+    $response->assertJsonFragment(['message' => 'Akun belum aktif atau dinonaktifkan']);
 });
 
 it('returns validation error when missing fields', function () {

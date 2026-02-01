@@ -64,6 +64,7 @@ class AuthController extends BaseController
      *     ),
      *
      *     @OA\Response(response=401, description="Email atau password salah"),
+     *     @OA\Response(response=403, description="Akun belum aktif atau dinonaktifkan"),
      *     @OA\Response(response=500, description="Kesalahan server")
      * )
      */
@@ -72,18 +73,25 @@ class AuthController extends BaseController
         try {
             Log::debug('Login attempt', ['email' => $request->email]);
 
-            $user = User::where('email', $request->email)
-                ->where('is_active', true)
-                ->first();
-
-            Log::debug('User query result', ['found' => $user ? 'yes' : 'no']);
+            // Find user by email first
+            $user = User::where('email', $request->email)->first();
 
             if (! $user) {
-                Log::debug('User not found or inactive', ['email' => $request->email]);
+                Log::debug('User not found', ['email' => $request->email]);
 
                 return $this->errorResponse(
                     'Email atau password salah',
                     401
+                );
+            }
+
+            // If user found but inactive, reject with clear error
+            if (! $user->is_active) {
+                Log::debug('User found but inactive', ['email' => $request->email]);
+
+                return $this->errorResponse(
+                    'Akun belum aktif atau dinonaktifkan',
+                    403
                 );
             }
 

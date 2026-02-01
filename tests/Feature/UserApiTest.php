@@ -3,7 +3,7 @@
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
-it('allows admin to create, update, list, and delete users', function () {
+it('allows admin to create, update, list, and toggle active state for users', function () {
     $admin = User::factory()->create(['role' => 'admin']);
 
     $this->actingAs($admin, 'sanctum');
@@ -29,7 +29,7 @@ it('allows admin to create, update, list, and delete users', function () {
     $listResp = $this->getJson('/api/users');
     $listResp->assertStatus(200);
 
-    // update
+    // update (basic fields)
     $updateResp = $this->putJson("/api/users/{$userId}", [
         'name' => 'Updated',
         'username' => 'newuser',
@@ -38,13 +38,20 @@ it('allows admin to create, update, list, and delete users', function () {
     ]);
     $updateResp->assertStatus(200);
 
-    // delete
-    $delResp = $this->deleteJson("/api/users/{$userId}");
-    $delResp->assertStatus(200);
+    // toggle active -> set inactive
+    $toggleResp = $this->putJson("/api/users/{$userId}", [
+        'name' => 'Updated',
+        'username' => 'newuser',
+        'email' => 'newuser@example.com',
+        'role' => 'kasir',
+        'is_active' => false,
+    ]);
+    $toggleResp->assertStatus(200);
 
-    // confirm deletion
     $showResp = $this->getJson("/api/users/{$userId}");
-    $showResp->assertStatus(404);
+    $showResp->assertStatus(200);
+    $showJson = $showResp->json();
+    expect($showJson['data']['is_active'])->toBeFalse();
 });
 
 it('prevents non-admin from managing users', function () {

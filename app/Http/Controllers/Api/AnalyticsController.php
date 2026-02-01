@@ -130,18 +130,37 @@ class AnalyticsController extends BaseController
     {
         try {
             $year = (int) $request->get('year', now()->year);
+            $driver = DB::getDriverName();
 
-            $rows = DB::table('penjualans as p')
-                ->join('users as u', 'u.id', '=', 'p.user_id')
-                ->whereYear('p.tgl', $year)
-                ->groupBy('u.id', 'u.name', 'u.username', DB::raw('MONTH(p.tgl)'))
-                ->select('u.id', 'u.name', 'u.username')
-                ->selectRaw('MONTH(p.tgl) as bulan')
-                ->selectRaw('SUM(p.total_akhir) as total_penjualan')
-                ->selectRaw('COUNT(*) as jumlah_transaksi')
-                ->orderBy('u.id')
-                ->orderBy('bulan')
-                ->get();
+            // Use driver-appropriate month/year extraction to support sqlite during tests.
+            if ($driver === 'sqlite') {
+                $monthExpr = "CAST(strftime('%m', p.tgl) AS INTEGER)";
+                $yearCondition = ["strftime('%Y', p.tgl) = ?", [(string) $year]];
+
+                $rows = DB::table('penjualans as p')
+                    ->join('users as u', 'u.id', '=', 'p.user_id')
+                    ->whereRaw($yearCondition[0], $yearCondition[1])
+                    ->groupBy('u.id', 'u.name', 'u.username', DB::raw($monthExpr))
+                    ->select('u.id', 'u.name', 'u.username')
+                    ->selectRaw("{$monthExpr} as bulan")
+                    ->selectRaw('SUM(p.total_akhir) as total_penjualan')
+                    ->selectRaw('COUNT(*) as jumlah_transaksi')
+                    ->orderBy('u.id')
+                    ->orderBy('bulan')
+                    ->get();
+            } else {
+                $rows = DB::table('penjualans as p')
+                    ->join('users as u', 'u.id', '=', 'p.user_id')
+                    ->whereYear('p.tgl', $year)
+                    ->groupBy('u.id', 'u.name', 'u.username', DB::raw('MONTH(p.tgl)'))
+                    ->select('u.id', 'u.name', 'u.username')
+                    ->selectRaw('MONTH(p.tgl) as bulan')
+                    ->selectRaw('SUM(p.total_akhir) as total_penjualan')
+                    ->selectRaw('COUNT(*) as jumlah_transaksi')
+                    ->orderBy('u.id')
+                    ->orderBy('bulan')
+                    ->get();
+            }
 
             return $this->successResponse([
                 'year' => $year,

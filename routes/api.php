@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\BarangController;
 use App\Http\Controllers\Api\KategoriController;
 use App\Http\Controllers\Api\PelangganController;
 use App\Http\Controllers\Api\PenjualanController;
+use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
 // Public routes
@@ -28,8 +29,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/penjualans/summary', [PenjualanController::class, 'summary']);
     Route::get('/audit-logs', [AuditLogController::class, 'index']);
 
-    // User management (admin only)
-    Route::apiResource('users', \App\Http\Controllers\Api\UserController::class);
+    // User management (admin only) - delete not allowed; manage via activate/deactivate
+    Route::apiResource('users', UserController::class)->only(['index', 'show', 'store', 'update']);
 
     // Analytics routes
     Route::get('/analytics/summary', [AnalyticsController::class, 'summary']);
