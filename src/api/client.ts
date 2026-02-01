@@ -1,6 +1,16 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8303/api';
+// FE environment: 'deployment' (default) or 'production'
+const FE_ENV = import.meta.env.VITE_FE_ENV || 'deployment';
+
+// Rule:
+// - if FE_ENV === 'production' => use VITE_API_PUBLIC
+// - otherwise (deployment) => use VITE_API_LOCAL
+// Fallback to VITE_API_URL for compatibility, then use current origin + /api
+// (avoid hard-coded localhost in production builds)
+const API_BASE_URL = (
+  FE_ENV === 'production' ? import.meta.env.VITE_API_PUBLIC : import.meta.env.VITE_API_LOCAL
+) || import.meta.env.VITE_API_URL || `${typeof window !== 'undefined' ? window.location.origin : 'http://localhost:8303'}/api`;
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
