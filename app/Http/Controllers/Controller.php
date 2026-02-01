@@ -12,7 +12,7 @@ use OpenApi\Annotations as OA;
  * )
  *
  * @OA\Server(
- *      url="http://localhost:8303/api",
+ *      url=L5_SWAGGER_CONST_HOST,
  *      description="Development Server"
  * )
  *

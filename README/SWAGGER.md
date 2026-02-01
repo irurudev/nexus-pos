@@ -51,6 +51,21 @@ The Swagger/OpenAPI 3.0 documentation is implemented and available both as a JSO
 
 ---
 
+## Deploy (Regenerate Swagger) ✅
+
+- Set `APP_URL` in your production environment (e.g. `APP_URL=https://api.example.com`). Optionally set `L5_SWAGGER_CONST_HOST` if you need a different public URL (e.g. `L5_SWAGGER_CONST_HOST=https://api.example.com/api`).
+
+- After deploying, run:
+
+```bash
+php artisan config:clear && php artisan config:cache
+php artisan l5-swagger:generate
+```
+
+- Verify the generated spec at `/api/swagger.json` and the UI at `/api/documentation`.
+
+---
+
 ## Integration & Tools
 - Import the OpenAPI JSON into Postman / Insomnia.
 - Generate client SDKs using OpenAPI Generator.
