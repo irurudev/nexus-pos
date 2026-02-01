@@ -53,12 +53,30 @@ export default function LoginPage() {
     }
   };
 
-  // Helper untuk quick login agar tidak memicu error event
-  const quickLogin = (e: string, p: string) => {
+  // Helper untuk quick login: langsung panggil login dengan kredensial yang diberikan
+  // agar tidak bergantung pada pembaruan state asinkron dan menghindari body kosong.
+  const quickLogin = async (e: string, p: string) => {
     setEmail(e);
     setPassword(p);
-    // Kita beri sedikit delay agar state ter-update sebelum submit
-    setTimeout(() => handleSubmit(), 100);
+
+    setIsLoading(true);
+    try {
+      await login(e, p);
+      toaster.create({
+        title: 'Login Berhasil',
+        description: 'Selamat datang kembali!',
+        type: 'success',
+      });
+      navigate('/dashboard');
+    } catch (error: any) {
+      toaster.create({
+        title: 'Login Gagal',
+        description: error.response?.data?.message || 'Email atau password salah',
+        type: 'error',
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
