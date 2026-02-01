@@ -20,11 +20,12 @@ import {
   DialogBody,
   DialogFooter,
   DialogCloseTrigger,
+  Input,
 } from '@chakra-ui/react';
 import ConfirmDialog from '../../components/common/ConfirmDialog';
 import Pagination from '../../components/common/Pagination';
 import usePermissions from '../../hooks/usePermissions';
-import { FiEye, FiTrash2, FiPlus } from 'react-icons/fi';
+import { FiEye, FiTrash2, FiPlus, FiSearch } from 'react-icons/fi';
 import { penjualanAPI, barangAPI, pelangganAPI, type Penjualan as PenjualanType, type Barang as BarangType, type Pelanggan as PelangganType } from '../../services';
 import PenjualanForm from './PenjualanForm';
 
@@ -42,6 +43,7 @@ export default function PenjualanPage() {
   const [page, setPage] = useState(1);
   const [totalPenjualansCount, setTotalPenjualansCount] = useState(0);
   const [lastPage, setLastPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState('');
   const pageSize = 10;
   const [isLoading, setIsLoading] = useState(true);
   const [isDialogOpen, setDialogOpen] = useState(false);
@@ -58,15 +60,17 @@ export default function PenjualanPage() {
   const [selectedPenjualanDetail, setSelectedPenjualanDetail] = useState<PenjualanType | null>(null);
   const [isLoadingDetail, setLoadingDetail] = useState(false);
 
+  // Fetch data (debounced on searchTerm)
   useEffect(() => {
-    fetchData();
-  }, [page]);
+    const t = setTimeout(() => fetchData(), 300);
+    return () => clearTimeout(t);
+  }, [page, searchTerm]);
 
   const fetchData = async () => {
     try {
       setIsLoading(true);
       const [penjualanRes, barangRes, pelangganRes] = await Promise.all([
-        penjualanAPI.getAll({ per_page: pageSize, page }),
+        penjualanAPI.getAll({ per_page: pageSize, page, search: searchTerm || undefined }),
         barangAPI.getAll({ per_page: 1000 }),
         pelangganAPI.getAll({ per_page: 1000 }),
       ]);
@@ -205,6 +209,17 @@ export default function PenjualanPage() {
           )}
         </HStack>
 
+        {/* Search (position like Barang page) */}
+        <HStack>
+          <Input
+            placeholder="Cari ID / Pelanggan / Tanggal"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            color="gray.900"
+          />
+          <FiSearch />
+        </HStack>
+
         <Card.Root>
           <Card.Body>
             {isLoading ? (
@@ -213,26 +228,28 @@ export default function PenjualanPage() {
               <Center py={10}><Text color="gray.500">Belum ada data</Text></Center>
             ) : (
               <>
-              <Table.Root>
-                <Table.Header>
-                  <Table.Row bg="gray.50">
-                    <Table.ColumnHeader width="60px">#</Table.ColumnHeader>
-                    <Table.ColumnHeader>ID</Table.ColumnHeader>
-                    <Table.ColumnHeader>Pelanggan</Table.ColumnHeader>
-                    <Table.ColumnHeader>Tanggal</Table.ColumnHeader>
-                    <Table.ColumnHeader textAlign="end">Total</Table.ColumnHeader>
-                    <Table.ColumnHeader width="100px">Aksi</Table.ColumnHeader>
-                  </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                  {visiblePenjualans.map((p, i) => (
-                    <Table.Row key={p.id_nota}>
-                      <Table.Cell>{penjualanStart + i}</Table.Cell>
-                      <Table.Cell fontWeight="semibold">{p.id_nota}</Table.Cell>
-                      <Table.Cell>{p.pelanggan?.nama || p.kode_pelanggan}</Table.Cell>
-                      <Table.Cell>{new Date(p.tgl).toLocaleDateString('id-ID')}</Table.Cell>
-                      <Table.Cell textAlign="end" fontWeight="semibold" color="blue.600">
-                        {formatCurrency(p.total_akhir)}
+              <Box overflowX="auto">
+                <Box minW={{ base: '600px', md: 'auto' }}>
+                  <Table.Root>
+                    <Table.Header>
+                      <Table.Row bg="gray.50">
+                        <Table.ColumnHeader width="60px">#</Table.ColumnHeader>
+                        <Table.ColumnHeader>ID</Table.ColumnHeader>
+                        <Table.ColumnHeader>Pelanggan</Table.ColumnHeader>
+                        <Table.ColumnHeader>Tanggal</Table.ColumnHeader>
+                        <Table.ColumnHeader textAlign="end">Total</Table.ColumnHeader>
+                        <Table.ColumnHeader width="100px">Aksi</Table.ColumnHeader>
+                      </Table.Row>
+                    </Table.Header>
+                    <Table.Body>
+                      {visiblePenjualans.map((p, i) => (
+                        <Table.Row key={p.id_nota}>
+                          <Table.Cell>{penjualanStart + i}</Table.Cell>
+                          <Table.Cell fontWeight="semibold">{p.id_nota}</Table.Cell>
+                          <Table.Cell>{p.pelanggan?.nama || p.kode_pelanggan}</Table.Cell>
+                          <Table.Cell>{new Date(p.tgl).toLocaleDateString('id-ID')}</Table.Cell>
+                          <Table.Cell textAlign="end" fontWeight="semibold" color="blue.600">
+                            {formatCurrency(p.total_akhir)}
                       </Table.Cell>
                       <Table.Cell>
                         <HStack gap={1}>
@@ -246,6 +263,8 @@ export default function PenjualanPage() {
                   ))}
                 </Table.Body>
               </Table.Root>
+                </Box>
+              </Box>
 
               {/* Pagination */}
               {totalPenjualans > pageSize && (
@@ -257,7 +276,14 @@ export default function PenjualanPage() {
         </Card.Root>
       </VStack>
 
-      <DialogRoot open={isDialogOpen} onOpenChange={(v: any) => setDialogOpen(Boolean(v?.open ?? v))} size="lg">
+      <DialogRoot open={isDialogOpen} onOpenChange={(v: any) => {
+        const open = Boolean(v?.open ?? v);
+        if (!open) {
+          // blur any focused element to prevent aria-hidden conflicts
+          try { (document.activeElement as HTMLElement | null)?.blur(); } catch (e) {}
+        }
+        setDialogOpen(open);
+      }} size="lg">
         <DialogBackdrop />
         <DialogContent position="fixed" top={{ base: '8vh', md: '10vh' }} left="50%" transform="translateX(-50%)" zIndex="overlay" maxW={{ base: '95vw', md: '760px' }}>
           <DialogHeader>
@@ -280,7 +306,13 @@ export default function PenjualanPage() {
       </DialogRoot>
 
       {/* Detail dialog */}
-      <DialogRoot open={isDetailOpen} onOpenChange={(v: any) => setDetailOpen(Boolean(v?.open ?? v))} size="lg">
+      <DialogRoot open={isDetailOpen} onOpenChange={(v: any) => {
+        const open = Boolean(v?.open ?? v);
+        if (!open) {
+          try { (document.activeElement as HTMLElement | null)?.blur(); } catch (e) {}
+        }
+        setDetailOpen(open);
+      }} size="lg">
         <DialogBackdrop />
         <DialogContent position="fixed" top={{ base: '8vh', md: '10vh' }} left="50%" transform="translateX(-50%)" zIndex="overlay" maxW={{ base: '95vw', md: '760px' }}>
           <DialogHeader>
@@ -304,37 +336,41 @@ export default function PenjualanPage() {
                   </Box>
                 </HStack>
 
-                <Table.Root>
-                  <Table.Header>
-                    <Table.Row bg="gray.50">
-                      <Table.ColumnHeader width="60px">#</Table.ColumnHeader>
-                      <Table.ColumnHeader>Barang</Table.ColumnHeader>
-                      <Table.ColumnHeader textAlign="end">Qty</Table.ColumnHeader>
-                      <Table.ColumnHeader textAlign="end">Harga</Table.ColumnHeader>
-                      <Table.ColumnHeader textAlign="end">Jumlah</Table.ColumnHeader>
-                    </Table.Row>
-                  </Table.Header>
-                  <Table.Body>
-                    {((selectedPenjualanDetail as any).itemPenjualans ?? (selectedPenjualanDetail as any).item_penjualans ?? []).map((it: any, i: number) => (
-                      <Table.Row key={it.id ?? `${it.kode_barang}-${Math.random()}`}>
-                        <Table.Cell>{i + 1}</Table.Cell>
-                        <Table.Cell>
-                          <Text fontWeight="semibold" color="gray.800">{it.kode_barang}</Text>
-                          <Text fontSize="sm" color="gray.600">{it.nama_barang ?? it.barang?.nama ?? barangs.find((b: any) => b.kode_barang === it.kode_barang)?.nama ?? ''}</Text>
-                        </Table.Cell>
-                        <Table.Cell textAlign="end">
-                          <Text color="gray.800" fontWeight="semibold">{it.qty ?? it.qty}</Text>
-                        </Table.Cell>
-                        <Table.Cell textAlign="end">
-                          <Text color="gray.800" fontWeight="semibold">{formatCurrency(Number(it.harga_satuan ?? it.harga_satuan))}</Text>
-                        </Table.Cell>
+                <Box overflowX="auto">
+                  <Box minW={{ base: '600px', md: 'auto' }}>
+                    <Table.Root>
+                      <Table.Header>
+                        <Table.Row bg="gray.50">
+                          <Table.ColumnHeader width="60px">#</Table.ColumnHeader>
+                          <Table.ColumnHeader>Barang</Table.ColumnHeader>
+                          <Table.ColumnHeader textAlign="end">Qty</Table.ColumnHeader>
+                          <Table.ColumnHeader textAlign="end">Harga</Table.ColumnHeader>
+                          <Table.ColumnHeader textAlign="end">Jumlah</Table.ColumnHeader>
+                        </Table.Row>
+                      </Table.Header>
+                      <Table.Body>
+                        {((selectedPenjualanDetail as any).itemPenjualans ?? (selectedPenjualanDetail as any).item_penjualans ?? []).map((it: any, i: number) => (
+                          <Table.Row key={it.id ?? `${it.kode_barang}-${Math.random()}`}>
+                            <Table.Cell>{i + 1}</Table.Cell>
+                            <Table.Cell>
+                              <Text fontWeight="semibold" color="gray.800">{it.kode_barang}</Text>
+                              <Text fontSize="sm" color="gray.600">{it.nama_barang ?? it.barang?.nama ?? barangs.find((b: any) => b.kode_barang === it.kode_barang)?.nama ?? ''}</Text>
+                            </Table.Cell>
+                            <Table.Cell textAlign="end">
+                              <Text color="gray.800" fontWeight="semibold">{it.qty ?? it.qty}</Text>
+                            </Table.Cell>
+                            <Table.Cell textAlign="end">
+                              <Text color="gray.800" fontWeight="semibold">{formatCurrency(Number(it.harga_satuan ?? it.harga_satuan))}</Text>
+                            </Table.Cell>
                         <Table.Cell textAlign="end">
                           <Text color="gray.800" fontWeight="semibold">{formatCurrency(Number(it.jumlah ?? it.jumlah))}</Text>
                         </Table.Cell>
                       </Table.Row>
                     ))}
                   </Table.Body>
-                </Table.Root>
+                    </Table.Root>
+                  </Box>
+                </Box>
               </VStack>
             ) : (
               <Center py={10}><Text color="gray.500">Tidak ada data</Text></Center>

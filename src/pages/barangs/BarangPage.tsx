@@ -198,63 +198,67 @@ export default function BarangPage() {
               </Center>
             ) : (
               <>
-              <Table.Root>
-                <Table.Header>
-                  <Table.Row bg="gray.50">
-                    <Table.ColumnHeader width="60px">#</Table.ColumnHeader>
-                    <Table.ColumnHeader>Kode</Table.ColumnHeader>
-                    <Table.ColumnHeader>Nama Barang</Table.ColumnHeader>
-                    <Table.ColumnHeader>Kategori</Table.ColumnHeader>
-                    <Table.ColumnHeader textAlign="end">Harga Jual</Table.ColumnHeader>
-                    <Table.ColumnHeader textAlign="end">Stok</Table.ColumnHeader>
-                    <Table.ColumnHeader width="100px">Aksi</Table.ColumnHeader>
-                  </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                  {visibleBarangs.map((barang, i) => (
-                    <Table.Row key={barang.kode_barang}>
-                      <Table.Cell>{barangStart + i}</Table.Cell>
-                      <Table.Cell fontWeight="semibold">{barang.kode_barang}</Table.Cell>
-                      <Table.Cell>{barang.nama}</Table.Cell>
-                      <Table.Cell>
-                        <Badge>{barang.kategori?.nama_kategori || `Kategori ${barang.kategori_id}`}</Badge>
-                      </Table.Cell>
-                      <Table.Cell textAlign="end" fontWeight="semibold" color="blue.600">
-                        {formatCurrency(barang.harga_jual)}
-                      </Table.Cell>
-                      <Table.Cell textAlign="end">
-                        <Badge colorScheme={barang.stok > 10 ? 'green' : barang.stok > 5 ? 'yellow' : 'red'}>
-                          {barang.stok}
-                        </Badge>
-                      </Table.Cell>
-                      <Table.Cell>
-                        <HStack gap={1}>
-                          {perms.canEdit('barang') ? (
-                            <>
-                              <Button size="sm" variant="ghost" colorScheme="blue" onClick={() => handleOpenEdit(barang)}>
-                                <FiEdit2 />
-                              </Button>
-                              <Button
-                                size="sm"
-                                variant="ghost"
-                                colorScheme="red"
-                                onClick={() => {
-                                  setDeleteId(barang.kode_barang);
-                                  setDeleteOpen(true);
-                                }}
-                              >
-                                <FiTrash2 />
-                              </Button>
-                            </>
-                          ) : (
-                            <Text fontSize="sm" color="gray.500">Hanya admin</Text>
-                          )}
-                        </HStack>
-                      </Table.Cell>
-                    </Table.Row>
-                  ))}
-                </Table.Body>
-              </Table.Root>
+              <Box overflowX="auto">
+                <Box minW={{ base: '600px', md: 'auto' }}>
+                  <Table.Root>
+                    <Table.Header>
+                      <Table.Row bg="gray.50">
+                        <Table.ColumnHeader width="60px">#</Table.ColumnHeader>
+                        <Table.ColumnHeader>Kode</Table.ColumnHeader>
+                        <Table.ColumnHeader>Nama Barang</Table.ColumnHeader>
+                        <Table.ColumnHeader>Kategori</Table.ColumnHeader>
+                        <Table.ColumnHeader textAlign="end">Harga Jual</Table.ColumnHeader>
+                        <Table.ColumnHeader textAlign="end">Stok</Table.ColumnHeader>
+                        <Table.ColumnHeader width="100px">Aksi</Table.ColumnHeader>
+                      </Table.Row>
+                    </Table.Header>
+                    <Table.Body>
+                      {visibleBarangs.map((barang, i) => (
+                        <Table.Row key={barang.kode_barang}>
+                          <Table.Cell>{barangStart + i}</Table.Cell>
+                          <Table.Cell fontWeight="semibold">{barang.kode_barang}</Table.Cell>
+                          <Table.Cell>{barang.nama}</Table.Cell>
+                          <Table.Cell>
+                            <Badge>{barang.kategori?.nama_kategori || `Kategori ${barang.kategori_id}`}</Badge>
+                          </Table.Cell>
+                          <Table.Cell textAlign="end" fontWeight="semibold" color="blue.600">
+                            {formatCurrency(barang.harga_jual)}
+                          </Table.Cell>
+                          <Table.Cell textAlign="end">
+                            <Badge colorScheme={barang.stok > 10 ? 'green' : barang.stok > 5 ? 'yellow' : 'red'}>
+                              {barang.stok}
+                            </Badge>
+                          </Table.Cell>
+                          <Table.Cell>
+                            <HStack gap={1}>
+                              {perms.canEdit('barang') ? (
+                                <>
+                                  <Button size="sm" variant="ghost" colorScheme="blue" onClick={() => handleOpenEdit(barang)}>
+                                    <FiEdit2 />
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    colorScheme="red"
+                                    onClick={() => {
+                                      setDeleteId(barang.kode_barang);
+                                      setDeleteOpen(true);
+                                    }}
+                                  >
+                                    <FiTrash2 />
+                                  </Button>
+                                </>
+                              ) : (
+                                <Text fontSize="sm" color="gray.500">Hanya admin</Text>
+                              )}
+                            </HStack>
+                          </Table.Cell>
+                        </Table.Row>
+                      ))}
+                    </Table.Body>
+                  </Table.Root>
+                </Box>
+              </Box>
 
               {/* Pagination */}
               {totalBarangs > pageSize && (

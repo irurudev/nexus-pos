@@ -230,7 +230,7 @@ export const pelangganAPI = {
 };
 
 export const penjualanAPI = {
-  getAll: async (params?: { per_page?: number; page?: number; start_date?: string; end_date?: string }): Promise<PaginatedResponse<Penjualan>> => {
+  getAll: async (params?: { per_page?: number; page?: number; start_date?: string; end_date?: string; search?: string }): Promise<PaginatedResponse<Penjualan>> => {
     const response = await apiClient.get('/penjualans', { params });
     return response.data;
   },

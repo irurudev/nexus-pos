@@ -79,36 +79,40 @@ export default function AuditLogsPage() {
             <Center py={8}><Text color="gray.500">Tidak ada data</Text></Center>
           ) : (
             <>
-              <Table.Root>
-                <Table.Header>
-                  <Table.Row bg="gray.50">
-                  <Table.ColumnHeader><Text color="gray.900">Waktu</Text></Table.ColumnHeader>
-                  <Table.ColumnHeader><Text color="gray.900">User</Text></Table.ColumnHeader>
-                  <Table.ColumnHeader><Text color="gray.900">Aksi</Text></Table.ColumnHeader>
-                  <Table.ColumnHeader><Text color="gray.900">Resource</Text></Table.ColumnHeader>
-                  <Table.ColumnHeader><Text color="gray.900">ID</Text></Table.ColumnHeader>
-                  <Table.ColumnHeader><Text color="gray.900">IP</Text></Table.ColumnHeader>
-                  <Table.ColumnHeader><Text color="gray.900">Detail</Text></Table.ColumnHeader>
-                </Table.Row>
-              </Table.Header>
-                <Table.Body>
-                  {logs.map((l: any) => (
-                    <Table.Row key={l.id}>
-                      <Table.Cell><Text color="gray.900">{new Date(l.created_at).toLocaleString()}</Text></Table.Cell>
-                      <Table.Cell><Text color="gray.900">{l.user?.name ?? l.user_id ?? '-'}</Text></Table.Cell>
-                      <Table.Cell><Text color="gray.900">{l.action}</Text></Table.Cell>
-                      <Table.Cell><Text color="gray.900">{l.auditable_type.split('\\').pop()}</Text></Table.Cell>
-                      <Table.Cell><Text color="gray.900">{l.auditable_id}</Text></Table.Cell>
-                      <Table.Cell><Text color="gray.900">{l.ip_address}</Text></Table.Cell>
-                      <Table.Cell>
-                        <Button size="sm" variant="ghost" title="Lihat detail" onClick={() => { setSelectedLog(l); setDetailOpen(true); }}>
-                          <Icon as={FiEye} boxSize={4} color="gray.900" />
-                        </Button>
-                      </Table.Cell>
-                    </Table.Row>
-                  ))}
-                </Table.Body>
-              </Table.Root>
+              <Box overflowX="auto">
+                <Box minW={{ base: '600px', md: 'auto' }}>
+                  <Table.Root>
+                    <Table.Header>
+                      <Table.Row bg="gray.50">
+                        <Table.ColumnHeader><Text color="gray.900">Waktu</Text></Table.ColumnHeader>
+                        <Table.ColumnHeader><Text color="gray.900">User</Text></Table.ColumnHeader>
+                        <Table.ColumnHeader><Text color="gray.900">Aksi</Text></Table.ColumnHeader>
+                        <Table.ColumnHeader><Text color="gray.900">Resource</Text></Table.ColumnHeader>
+                        <Table.ColumnHeader><Text color="gray.900">ID</Text></Table.ColumnHeader>
+                        <Table.ColumnHeader><Text color="gray.900">IP</Text></Table.ColumnHeader>
+                        <Table.ColumnHeader><Text color="gray.900">Detail</Text></Table.ColumnHeader>
+                      </Table.Row>
+                    </Table.Header>
+                    <Table.Body>
+                      {logs.map((l: any) => (
+                        <Table.Row key={l.id}>
+                          <Table.Cell><Text color="gray.900">{new Date(l.created_at).toLocaleString()}</Text></Table.Cell>
+                          <Table.Cell><Text color="gray.900">{l.user?.name ?? l.user_id ?? '-'}</Text></Table.Cell>
+                          <Table.Cell><Text color="gray.900">{l.action}</Text></Table.Cell>
+                          <Table.Cell><Text color="gray.900">{l.auditable_type.split('\\').pop()}</Text></Table.Cell>
+                          <Table.Cell><Text color="gray.900">{l.auditable_id}</Text></Table.Cell>
+                          <Table.Cell><Text color="gray.900">{l.ip_address}</Text></Table.Cell>
+                          <Table.Cell>
+                            <Button size="sm" variant="ghost" title="Lihat detail" onClick={() => { setSelectedLog(l); setDetailOpen(true); }}>
+                              <Icon as={FiEye} boxSize={4} color="gray.900" />
+                            </Button>
+                          </Table.Cell>
+                        </Table.Row>
+                      ))}
+                    </Table.Body>
+                  </Table.Root>
+                </Box>
+              </Box>
 
               {total > pageSize && (
                 <Pagination page={page} setPage={setPage} lastPage={lastPage} total={total} pageSize={pageSize} />

@@ -109,6 +109,22 @@ const SidebarContent = ({ collapsed, location }: SidebarContentProps) => {
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [isSidebarCollapsed, setSidebarCollapsed] = useState(false);
+
+  // Auto-collapse sidebar on small screens (mobile)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const mq = window.matchMedia('(max-width: 768px)');
+    const handler = (e: MediaQueryListEvent | MediaQueryList) => setSidebarCollapsed(!!(e && 'matches' in e && e.matches));
+    // Initialize
+    handler(mq);
+    // Listen to changes
+    if ('addEventListener' in mq) mq.addEventListener('change', handler as any);
+    else (mq as any).addListener(handler as any);
+    return () => {
+      if ('removeEventListener' in mq) mq.removeEventListener('change', handler as any);
+      else (mq as any).removeListener(handler as any);
+    };
+  }, []);
   const { user, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();

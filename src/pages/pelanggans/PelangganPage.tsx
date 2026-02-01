@@ -123,60 +123,64 @@ export default function PelangganPage() {
               <Center py={10}><Text color="gray.500">Belum ada data</Text></Center>
             ) : (
               <>
-              <Table.Root>
-                <Table.Header>
-                  <Table.Row bg="gray.50">
-                    <Table.ColumnHeader width="60px">#</Table.ColumnHeader>
-                    <Table.ColumnHeader>ID</Table.ColumnHeader>
-                    <Table.ColumnHeader>Nama</Table.ColumnHeader>
-                    <Table.ColumnHeader>Gender</Table.ColumnHeader>
-                    <Table.ColumnHeader>Domisili</Table.ColumnHeader>
-                    <Table.ColumnHeader textAlign="end">Poin</Table.ColumnHeader>
-                    <Table.ColumnHeader width="100px">Aksi</Table.ColumnHeader>
-                  </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                  {visiblePelanggans.map((p, i) => (
-                    <Table.Row key={p.id_pelanggan}>
-                      <Table.Cell>{pelangganStart + i}</Table.Cell>
-                      <Table.Cell fontWeight="semibold">{p.id_pelanggan}</Table.Cell>
-                      <Table.Cell>{p.nama}</Table.Cell>
-                      <Table.Cell>
-                        <Badge colorScheme={p.jenis_kelamin === 'PRIA' ? 'blue' : 'pink'}>
-                          {p.jenis_kelamin}
-                        </Badge>
-                      </Table.Cell>
-                      <Table.Cell color="gray.600">{p.domisili}</Table.Cell>
-                      <Table.Cell textAlign="end">
-                        <Badge colorScheme="orange">{p.poin} poin</Badge>
-                      </Table.Cell>
-                      <Table.Cell>
-                        <HStack gap={1}>
-                          {perms.canEdit('pelanggan') ? (
-                            <Button size="sm" variant="ghost" colorScheme="blue" onClick={() => {
-                              setSelectedPelanggan(p);
-                              setDialogOpen(true);
-                            }}>
-                              <FiEdit2 />
-                            </Button>
-                          ) : null}
-                          {perms.canDelete('pelanggan') ? (
-                            <Button size="sm" variant="ghost" colorScheme="red" onClick={() => {
-                              setDeleteId(p.id_pelanggan);
-                              setDeleteOpen(true);
-                            }}>
-                              <FiTrash2 />
-                            </Button>
-                          ) : null}
-                          {!perms.canEdit('pelanggan') && !perms.canDelete('pelanggan') && (
-                            <Text fontSize="sm" color="gray.500">Hanya admin</Text>
-                          )}
-                        </HStack>
-                      </Table.Cell>
-                    </Table.Row>
-                  ))}
-                </Table.Body>
-              </Table.Root>
+              <Box overflowX="auto">
+                <Box minW={{ base: '600px', md: 'auto' }}>
+                  <Table.Root>
+                    <Table.Header>
+                      <Table.Row bg="gray.50">
+                        <Table.ColumnHeader width="60px">#</Table.ColumnHeader>
+                        <Table.ColumnHeader>ID</Table.ColumnHeader>
+                        <Table.ColumnHeader>Nama</Table.ColumnHeader>
+                        <Table.ColumnHeader>Gender</Table.ColumnHeader>
+                        <Table.ColumnHeader>Domisili</Table.ColumnHeader>
+                        <Table.ColumnHeader textAlign="end">Poin</Table.ColumnHeader>
+                        <Table.ColumnHeader width="100px">Aksi</Table.ColumnHeader>
+                      </Table.Row>
+                    </Table.Header>
+                    <Table.Body>
+                      {visiblePelanggans.map((p, i) => (
+                        <Table.Row key={p.id_pelanggan}>
+                          <Table.Cell>{pelangganStart + i}</Table.Cell>
+                          <Table.Cell fontWeight="semibold">{p.id_pelanggan}</Table.Cell>
+                          <Table.Cell>{p.nama}</Table.Cell>
+                          <Table.Cell>
+                            <Badge colorScheme={p.jenis_kelamin === 'PRIA' ? 'blue' : 'pink'}>
+                              {p.jenis_kelamin}
+                            </Badge>
+                          </Table.Cell>
+                          <Table.Cell color="gray.600">{p.domisili}</Table.Cell>
+                          <Table.Cell textAlign="end">
+                            <Badge colorScheme="orange">{p.poin} poin</Badge>
+                          </Table.Cell>
+                          <Table.Cell>
+                            <HStack gap={1}>
+                              {perms.canEdit('pelanggan') ? (
+                                <Button size="sm" variant="ghost" colorScheme="blue" onClick={() => {
+                                  setSelectedPelanggan(p);
+                                  setDialogOpen(true);
+                                }}>
+                                  <FiEdit2 />
+                                </Button>
+                              ) : null}
+                              {perms.canDelete('pelanggan') ? (
+                                <Button size="sm" variant="ghost" colorScheme="red" onClick={() => {
+                                  setDeleteId(p.id_pelanggan);
+                                  setDeleteOpen(true);
+                                }}>
+                                  <FiTrash2 />
+                                </Button>
+                              ) : null}
+                              {!perms.canEdit('pelanggan') && !perms.canDelete('pelanggan') && (
+                                <Text fontSize="sm" color="gray.500">Hanya admin</Text>
+                              )}
+                            </HStack>
+                          </Table.Cell>
+                        </Table.Row>
+                      ))}
+                    </Table.Body>
+                  </Table.Root>
+                </Box>
+              </Box>
 
               {/* Pagination */}
               {totalPelanggans > pageSize && (

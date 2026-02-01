@@ -145,53 +145,57 @@ export default function KategoriPage() {
               </Center>
             ) : (
               <>
-              <Table.Root>
-                <Table.Header>
-                  <Table.Row bg="gray.50">
-                    <Table.ColumnHeader width="60px">#</Table.ColumnHeader>
-                    <Table.ColumnHeader>Nama Kategori</Table.ColumnHeader>
-                    <Table.ColumnHeader width="100px">Aksi</Table.ColumnHeader>
-                  </Table.Row>
-                </Table.Header>
-                <Table.Body>
-                  {visibleKategoris.map((kategori, i) => (
-                    <Table.Row key={kategori.id_kategori}>
-                      <Table.Cell fontWeight="semibold">{kategoriStart + i}</Table.Cell>
-                      <Table.Cell>{kategori.nama_kategori}</Table.Cell>
-                      <Table.Cell>
-                        <HStack gap={1}>
-                          {perms.canEdit('kategori') ? (
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              colorScheme="blue"
-                              onClick={() => handleOpenEdit(kategori)}
-                            >
-                              <FiEdit2 />
-                            </Button>
-                          ) : null}
-                          {perms.canDelete('kategori') ? (
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              colorScheme="red"
-                              onClick={() => {
-                                setDeleteId(kategori.id_kategori);
-                                setDeleteOpen(true);
-                              }}
-                            >
-                              <FiTrash2 />
-                            </Button>
-                          ) : null}
-                          {!perms.canEdit('kategori') && !perms.canDelete('kategori') && (
-                            <Text fontSize="sm" color="gray.500">Hanya admin</Text>
-                          )}
-                        </HStack>
-                      </Table.Cell>
-                    </Table.Row>
-                  ))}
-                </Table.Body>
-              </Table.Root>
+              <Box overflowX="auto">
+                <Box minW={{ base: '600px', md: 'auto' }}>
+                  <Table.Root>
+                    <Table.Header>
+                      <Table.Row bg="gray.50">
+                        <Table.ColumnHeader width="60px">#</Table.ColumnHeader>
+                        <Table.ColumnHeader>Nama Kategori</Table.ColumnHeader>
+                        <Table.ColumnHeader width="100px">Aksi</Table.ColumnHeader>
+                      </Table.Row>
+                    </Table.Header>
+                    <Table.Body>
+                      {visibleKategoris.map((kategori, i) => (
+                        <Table.Row key={kategori.id_kategori}>
+                          <Table.Cell fontWeight="semibold">{kategoriStart + i}</Table.Cell>
+                          <Table.Cell>{kategori.nama_kategori}</Table.Cell>
+                          <Table.Cell>
+                            <HStack gap={1}>
+                              {perms.canEdit('kategori') ? (
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  colorScheme="blue"
+                                  onClick={() => handleOpenEdit(kategori)}
+                                >
+                                  <FiEdit2 />
+                                </Button>
+                              ) : null}
+                              {perms.canDelete('kategori') ? (
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  colorScheme="red"
+                                  onClick={() => {
+                                    setDeleteId(kategori.id_kategori);
+                                    setDeleteOpen(true);
+                                  }}
+                                >
+                                  <FiTrash2 />
+                                </Button>
+                              ) : null}
+                              {!perms.canEdit('kategori') && !perms.canDelete('kategori') && (
+                                <Text fontSize="sm" color="gray.500">Hanya admin</Text>
+                              )}
+                            </HStack>
+                          </Table.Cell>
+                        </Table.Row>
+                      ))}
+                    </Table.Body>
+                  </Table.Root>
+                </Box>
+              </Box>
 
               {/* Pagination */}
               {totalKategoris > pageSize && (

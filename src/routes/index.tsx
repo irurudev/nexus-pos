@@ -11,7 +11,17 @@ import AuditLogsPage from '../pages/audit-logs/AuditLogsPage';
 
 // Protected Route Component
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, isLoading } = useAuth();
+  // Defensive: use try/catch in case context is not yet ready (HMR / startup)
+  let isAuthenticated = false;
+  let isLoading = true;
+  try {
+    const auth = useAuth();
+    isAuthenticated = auth.isAuthenticated;
+    isLoading = auth.isLoading;
+  } catch (e) {
+    // context not available yet -> show loading
+    isLoading = true;
+  }
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -22,7 +32,15 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
 // Public Route Component (redirect if authenticated)
 function PublicRoute({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, isLoading } = useAuth();
+  let isAuthenticated = false;
+  let isLoading = true;
+  try {
+    const auth = useAuth();
+    isAuthenticated = auth.isAuthenticated;
+    isLoading = auth.isLoading;
+  } catch (e) {
+    isLoading = true;
+  }
 
   if (isLoading) {
     return <div>Loading...</div>;

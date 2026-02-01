@@ -305,24 +305,28 @@ export default function DashboardPage() {
               {kategoriData.length === 0 ? (
                 <Center py={8}><Text color="gray.500">Belum ada data kategori</Text></Center>
               ) : (
-                <Table.Root>
-                  <Table.Header>
-                    <Table.Row bg="gray.50">
-                      <Table.ColumnHeader>Kategori</Table.ColumnHeader>
-                      <Table.ColumnHeader textAlign="end">Qty Terjual</Table.ColumnHeader>
-                      <Table.ColumnHeader textAlign="end">Total Penjualan</Table.ColumnHeader>
-                    </Table.Row>
-                  </Table.Header>
-                  <Table.Body>
-                    {kategoriData.map((item) => (
-                      <Table.Row key={item.id}>
-                        <Table.Cell fontWeight="semibold">{item.nama_kategori}</Table.Cell>
-                        <Table.Cell textAlign="end" fontWeight="semibold">{item.total_qty}</Table.Cell>
-                        <Table.Cell textAlign="end">{formatCurrency(item.total_penjualan)}</Table.Cell>
-                      </Table.Row>
-                    ))}
-                  </Table.Body>
-                </Table.Root>
+                <Box overflowX="auto">
+                  <Box minW={{ base: '600px', md: 'auto' }}>
+                    <Table.Root>
+                      <Table.Header>
+                        <Table.Row bg="gray.50">
+                          <Table.ColumnHeader>Kategori</Table.ColumnHeader>
+                          <Table.ColumnHeader textAlign="end">Qty Terjual</Table.ColumnHeader>
+                          <Table.ColumnHeader textAlign="end">Total Penjualan</Table.ColumnHeader>
+                        </Table.Row>
+                      </Table.Header>
+                      <Table.Body>
+                        {kategoriData.map((item) => (
+                          <Table.Row key={item.id}>
+                            <Table.Cell fontWeight="semibold">{item.nama_kategori}</Table.Cell>
+                            <Table.Cell textAlign="end" fontWeight="semibold">{item.total_qty}</Table.Cell>
+                            <Table.Cell textAlign="end">{formatCurrency(item.total_penjualan)}</Table.Cell>
+                          </Table.Row>
+                        ))}
+                      </Table.Body>
+                    </Table.Root>
+                  </Box>
+                </Box>
               )}
             </Card.Body>
           </Card.Root>
@@ -334,24 +338,28 @@ export default function DashboardPage() {
               {kasirPerformance.length === 0 ? (
                 <Center py={8}><Text color="gray.500">Belum ada data kasir</Text></Center>
               ) : (
-                <Table.Root>
-                  <Table.Header>
-                    <Table.Row bg="gray.50">
-                      <Table.ColumnHeader>Nama Kasir</Table.ColumnHeader>
-                      <Table.ColumnHeader textAlign="end">Transaksi</Table.ColumnHeader>
-                      <Table.ColumnHeader textAlign="end">Total Penjualan</Table.ColumnHeader>
-                    </Table.Row>
-                  </Table.Header>
-                  <Table.Body>
-                    {kasirPerformance.map((k) => (
-                      <Table.Row key={k.id}>
-                        <Table.Cell fontWeight="semibold">{k.name} ({k.username})</Table.Cell>
-                        <Table.Cell textAlign="end">{k.jumlah_transaksi}</Table.Cell>
-                        <Table.Cell textAlign="end">{formatCurrency(k.total_penjualan)}</Table.Cell>
-                      </Table.Row>
-                    ))}
-                  </Table.Body>
-                </Table.Root>
+                <Box overflowX="auto">
+                  <Box minW={{ base: '600px', md: 'auto' }}>
+                    <Table.Root>
+                      <Table.Header>
+                        <Table.Row bg="gray.50">
+                          <Table.ColumnHeader>Nama Kasir</Table.ColumnHeader>
+                          <Table.ColumnHeader textAlign="end">Transaksi</Table.ColumnHeader>
+                          <Table.ColumnHeader textAlign="end">Total Penjualan</Table.ColumnHeader>
+                        </Table.Row>
+                      </Table.Header>
+                      <Table.Body>
+                        {kasirPerformance.map((k) => (
+                          <Table.Row key={k.id}>
+                            <Table.Cell fontWeight="semibold">{k.name} ({k.username})</Table.Cell>
+                            <Table.Cell textAlign="end">{k.jumlah_transaksi}</Table.Cell>
+                            <Table.Cell textAlign="end">{formatCurrency(k.total_penjualan)}</Table.Cell>
+                          </Table.Row>
+                        ))}
+                      </Table.Body>
+                    </Table.Root>
+                  </Box>
+                </Box>
               )}
             </Card.Body>
           </Card.Root>
@@ -363,24 +371,28 @@ export default function DashboardPage() {
               {topPelanggan.length === 0 ? (
                 <Center py={8}><Text color="gray.500">Belum ada data pelanggan</Text></Center>
               ) : (
-                <Table.Root>
-                  <Table.Header>
-                    <Table.Row bg="gray.50">
-                      <Table.ColumnHeader>Nama Pelanggan</Table.ColumnHeader>
-                      <Table.ColumnHeader textAlign="end">Transaksi</Table.ColumnHeader>
-                      <Table.ColumnHeader textAlign="end">Total Pembelian</Table.ColumnHeader>
-                    </Table.Row>
-                  </Table.Header>
-                  <Table.Body>
-                    {topPelanggan.map((p) => (
-                      <Table.Row key={p.kode_pelanggan}>
-                        <Table.Cell fontWeight="semibold">{p.nama}</Table.Cell>
-                        <Table.Cell textAlign="end">{p.jumlah_transaksi}</Table.Cell>
-                        <Table.Cell textAlign="end">{formatCurrency(p.total_penjualan)}</Table.Cell>
-                      </Table.Row>
-                    ))}
-                  </Table.Body>
-                </Table.Root>
+                <Box overflowX="auto">
+                  <Box minW={{ base: '600px', md: 'auto' }}>
+                    <Table.Root>
+                      <Table.Header>
+                        <Table.Row bg="gray.50">
+                          <Table.ColumnHeader>Nama Pelanggan</Table.ColumnHeader>
+                          <Table.ColumnHeader textAlign="end">Transaksi</Table.ColumnHeader>
+                          <Table.ColumnHeader textAlign="end">Total Pembelian</Table.ColumnHeader>
+                        </Table.Row>
+                      </Table.Header>
+                      <Table.Body>
+                        {topPelanggan.map((p) => (
+                          <Table.Row key={p.kode_pelanggan}>
+                            <Table.Cell fontWeight="semibold">{p.nama}</Table.Cell>
+                            <Table.Cell textAlign="end">{p.jumlah_transaksi}</Table.Cell>
+                            <Table.Cell textAlign="end">{formatCurrency(p.total_penjualan)}</Table.Cell>
+                          </Table.Row>
+                        ))}
+                      </Table.Body>
+                    </Table.Root>
+                  </Box>
+                </Box>
               )}
             </Card.Body>
           </Card.Root>
