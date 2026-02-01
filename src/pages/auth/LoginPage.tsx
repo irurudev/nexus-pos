@@ -30,9 +30,12 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const currentYear = new Date().getFullYear();
 
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
   const handleSubmit = async (e?: React.FormEvent) => {
     e?.preventDefault();
     setIsLoading(true);
+    setErrorMessage(null);
 
     try {
       await login(email, password);
@@ -43,11 +46,25 @@ export default function LoginPage() {
       });
       navigate('/dashboard');
     } catch (error: any) {
-      toaster.create({
-        title: 'Login Gagal',
-        description: error.response?.data?.message || 'Email atau password salah',
-        type: 'error',
-      });
+      const status = error.response?.status;
+      const serverMsg = error.response?.data?.message;
+      if (status === 403) {
+        const msg = serverMsg || 'Akun belum aktif atau dinonaktifkan';
+        setErrorMessage(msg);
+        toaster.create({
+          title: 'Akun Dinonaktifkan',
+          description: msg,
+          type: 'error',
+        });
+      } else {
+        const msg = serverMsg || 'Email atau password salah';
+        setErrorMessage(msg);
+        toaster.create({
+          title: 'Login Gagal',
+          description: msg,
+          type: 'error',
+        });
+      }
     } finally {
       setIsLoading(false);
     }
@@ -60,6 +77,7 @@ export default function LoginPage() {
     setPassword(p);
 
     setIsLoading(true);
+    setErrorMessage(null);
     try {
       await login(e, p);
       toaster.create({
@@ -69,11 +87,25 @@ export default function LoginPage() {
       });
       navigate('/dashboard');
     } catch (error: any) {
-      toaster.create({
-        title: 'Login Gagal',
-        description: error.response?.data?.message || 'Email atau password salah',
-        type: 'error',
-      });
+      const status = error.response?.status;
+      const serverMsg = error.response?.data?.message;
+      if (status === 403) {
+        const msg = serverMsg || 'Akun belum aktif atau dinonaktifkan';
+        setErrorMessage(msg);
+        toaster.create({
+          title: 'Akun Dinonaktifkan',
+          description: msg,
+          type: 'error',
+        });
+      } else {
+        const msg = serverMsg || 'Email atau password salah';
+        setErrorMessage(msg);
+        toaster.create({
+          title: 'Login Gagal',
+          description: msg,
+          type: 'error',
+        });
+      }
     } finally {
       setIsLoading(false);
     }
@@ -146,6 +178,24 @@ export default function LoginPage() {
             {/* SISI KANAN: Login Form */}
             <Box w={{ base: 'full', md: '55%' }} p={{ base: 8, md: 16 }} bg="white">
               <VStack align="stretch" gap={8}>
+                <Box
+                  w="full"
+                  minH="56px"
+                  p={3}
+                  borderRadius="md"
+                  borderWidth="1px"
+                  borderColor={errorMessage ? 'red.200' : 'transparent'}
+                  bg={errorMessage ? 'red.50' : 'transparent'}
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  role={errorMessage ? 'alert' : undefined}
+                >
+                  <Text color={errorMessage ? 'red.600' : 'transparent'} fontSize="sm" fontWeight="semibold">
+                    {errorMessage || '\u00A0'}
+                  </Text>
+                </Box>
+
                 <VStack align="start" gap={2}>
                   <Heading size="xl" color="gray.800">Selamat Datang</Heading>
                   <Text color="gray.500">Silakan masuk dengan akun Anda</Text>

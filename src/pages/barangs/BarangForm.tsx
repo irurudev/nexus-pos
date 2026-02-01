@@ -35,10 +35,10 @@ export default function BarangForm({ isOpen, onClose, barang, kategoris, onSaved
     kode_barang: string;
     kategori_id: number;
     nama: string;
-    harga_beli: number;
-    harga_jual: number;
+    harga_beli?: number;
+    harga_jual?: number;
     stok: number;
-  }>({ kode_barang: '', kategori_id: 0, nama: '', harga_beli: 0, harga_jual: 0, stok: 0 });
+  }>({ kode_barang: '', kategori_id: 0, nama: '', harga_beli: undefined, harga_jual: undefined, stok: 0 });
 
   useEffect(() => {
     if (barang) {
@@ -51,7 +51,8 @@ export default function BarangForm({ isOpen, onClose, barang, kategoris, onSaved
         stok: barang.stok,
       });
     } else {
-      setFormData({ kode_barang: '', kategori_id: 0, nama: '', harga_beli: 0, harga_jual: 0, stok: 0 });
+      // do not default harga_beli/harga_jual to 0 — leave undefined so placeholder is shown
+      setFormData({ kode_barang: '', kategori_id: 0, nama: '', harga_beli: undefined, harga_jual: undefined, stok: 0 });
     }
   }, [barang]);
 
@@ -64,7 +65,7 @@ export default function BarangForm({ isOpen, onClose, barang, kategoris, onSaved
         return;
       }
 
-      if ((formData.harga_beli || 0) <= 0 || (formData.harga_jual || 0) <= 0) {
+      if (!formData.harga_beli || formData.harga_beli <= 0 || !formData.harga_jual || formData.harga_jual <= 0) {
         toaster.error({ title: 'Validasi Error', description: 'Harga beli dan harga jual harus lebih dari 0' });
         return;
       }

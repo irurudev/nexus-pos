@@ -54,6 +54,7 @@ export default function PenjualanPage() {
     id_pelanggan: '',
     items: [{ id_barang: '', jumlah: 1 }],
   });
+  const [submitAttempted, setSubmitAttempted] = useState(0);
 
   // Detail view state
   const [isDetailOpen, setDetailOpen] = useState(false);
@@ -108,6 +109,9 @@ export default function PenjualanPage() {
   const visiblePenjualans = penjualans;
 
   const handleSubmit = async () => {
+    // mark that user tried to submit so the form can show outlines
+    setSubmitAttempted((s) => s + 1);
+
     try {
       if (formData.items.length === 0) {
         toaster.error({ title: 'Error', description: 'Minimal 1 item harus dipilih' });
@@ -296,6 +300,7 @@ export default function PenjualanPage() {
               pelanggans={pelanggans}
               formData={formData}
               setFormData={setFormData}
+              submitAttempted={submitAttempted}
             />
           </DialogBody>
           <DialogFooter>

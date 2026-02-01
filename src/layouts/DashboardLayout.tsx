@@ -54,6 +54,7 @@ const SidebarContent = ({ collapsed, location }: SidebarContentProps) => {
   const items = [...menuItems];
   if (perms.role === 'admin') {
     items.push({ name: 'Audit Logs', path: '/audit-logs', icon: FiFolder });
+    items.push({ name: 'Users', path: '/users', icon: FiUser });
   }
 
   return (

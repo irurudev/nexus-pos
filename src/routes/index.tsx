@@ -8,6 +8,7 @@ import PelangganPage from '../pages/pelanggans/PelangganPage';
 import PenjualanPage from '../pages/penjualans/PenjualanPage';
 import DashboardLayout from '../layouts/DashboardLayout';
 import AuditLogsPage from '../pages/audit-logs/AuditLogsPage';
+import UsersPage from '../pages/users/UsersPage';
 
 // Protected Route Component
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -124,6 +125,17 @@ export function AppRoutes() {
           <ProtectedRoute>
             <DashboardLayout>
               <AuditLogsPage />
+            </DashboardLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/users"
+        element={
+          <ProtectedRoute>
+            <DashboardLayout>
+              <UsersPage />
             </DashboardLayout>
           </ProtectedRoute>
         }

@@ -15,9 +15,13 @@ interface SelectFieldProps {
   placeholder?: string;
   required?: boolean;
   disabled?: boolean;
+  isInvalid?: boolean;
 }
 
-export default function SelectField({ label, items, value, onChange, placeholder, required, disabled }: SelectFieldProps) {
+export default function SelectField({ label, items, value, onChange, placeholder, required, disabled, isInvalid }: SelectFieldProps) {
+  // `isInvalid` is intentionally kept for API compatibility; reference it to avoid TS "unused" errors
+  void isInvalid;
+
   const collection = useMemo(() => createListCollection({ items }), [items]);
 
   const posRef = useRef<HTMLDivElement | null>(null);
@@ -76,7 +80,8 @@ export default function SelectField({ label, items, value, onChange, placeholder
         <Select.HiddenSelect value={value} onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onChange(e.target.value)} disabled={disabled} />
 
         <Select.Control>
-          <Select.Trigger color="gray.900">
+          {/* Keep layout the same but do not apply red coloring when invalid */}
+          <Select.Trigger color="gray.900" borderWidth={1} borderColor="transparent" borderRadius="md" px={3} py={2}>
             <Text color="gray.900">{collection.items.find(it => it.value === value)?.label || placeholder}</Text>
           </Select.Trigger>
           <Select.IndicatorGroup>

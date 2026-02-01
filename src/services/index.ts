@@ -195,7 +195,8 @@ export const barangAPI = {
 
 export const pelangganAPI = {
   getAll: async (params?: { per_page?: number; page?: number; search?: string }): Promise<PaginatedResponse<Pelanggan>> => {
-    const response = await apiClient.get('/pelanggans', { params });
+    const defaultParams = params ?? { per_page: 1000, page: 1 };
+    const response = await apiClient.get('/pelanggans', { params: defaultParams });
     return response.data;
   },
 
@@ -228,6 +229,35 @@ export const pelangganAPI = {
     return response.data;
   },
 };
+
+export const usersAPI = {
+  getAll: async (params?: { per_page?: number; page?: number; search?: string }) => {
+    const defaultParams = params ?? { per_page: 10, page: 1 };
+    const response = await apiClient.get('/users', { params: defaultParams });
+    return response.data as PaginatedResponse<any>;
+  },
+
+  getById: async (id: number) => {
+    const response = await apiClient.get(`/users/${id}`);
+    return response.data as ApiResponse<any>;
+  },
+
+  create: async (data: { name: string; username: string; email: string; password: string; role: string; is_active?: boolean }) => {
+    const response = await apiClient.post('/users', data);
+    return response.data as ApiResponse<any>;
+  },
+
+  update: async (id: number, data: { name: string; username: string; email: string; password?: string | null; role: string; is_active?: boolean }) => {
+    const response = await apiClient.put(`/users/${id}`, data);
+    return response.data as ApiResponse<any>;
+  },
+
+  delete: async (id: number) => {
+    const response = await apiClient.delete(`/users/${id}`);
+    return response.data as ApiResponse<null>;
+  },
+};
+
 
 export const penjualanAPI = {
   getAll: async (params?: { per_page?: number; page?: number; start_date?: string; end_date?: string; search?: string }): Promise<PaginatedResponse<Penjualan>> => {
