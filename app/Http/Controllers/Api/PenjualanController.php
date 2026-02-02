@@ -207,29 +207,24 @@ class PenjualanController extends BaseController
             // authorization: ensure user can create a penjualan
             $this->authorize('create', Penjualan::class);
 
-            $items = array_map(function (array $item) {
-                // calculate jumlah if not provided
-                $item['jumlah'] = $item['jumlah'] ?? ((float) ($item['qty'] ?? 0) * (float) ($item['harga_satuan'] ?? 0));
-
-                return ItemPenjualanData::from($item);
-            }, $request->validated()['items']);
-
-            // allow backend to generate id_nota and tgl when not provided by client
             $validated = $request->validated();
 
-            $idNota = $validated['id_nota'] ?? Penjualan::generateId();
-            $tgl = $validated['tgl'] ?? now()->toDateTimeString();
+            // ensure backend generates id_nota and tgl when not provided
+            $validated['id_nota'] = $validated['id_nota'] ?? Penjualan::generateId();
+            $validated['tgl'] = $validated['tgl'] ?? now()->toDateTimeString();
+            $validated['user_id'] = $request->user()->id;
 
-            $penjualanData = new PenjualanData(
-                id_nota: $idNota,
-                tgl: $tgl,
-                kode_pelanggan: $validated['kode_pelanggan'] ?? null,
-                user_id: $request->user()->id,
-                subtotal: collect($items)->sum('jumlah'),
-                diskon: $validated['diskon'] ?? 0,
-                pajak: $validated['pajak'] ?? 0,
-                items: $items,
-            );
+            // calculate jumlah for each item if not provided
+            $validated['items'] = array_map(function (array $item) {
+                $item['jumlah'] = $item['jumlah'] ?? ((float) ($item['qty'] ?? 0) * (float) ($item['harga_satuan'] ?? 0));
+
+                return $item;
+            }, $validated['items'] ?? []);
+
+            // calculate subtotal from items
+            $validated['subtotal'] = (float) collect($validated['items'])->sum(fn ($i) => (float) ($i['jumlah'] ?? 0));
+
+            $penjualanData = PenjualanData::from($validated);
 
             $action = new CreatePenjualanAction;
             $penjualan = $action->execute($penjualanData);

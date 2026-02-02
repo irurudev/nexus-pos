@@ -32,24 +32,24 @@ it('creates penjualan and decrements stok accordingly', function () {
     ]);
 
     $items = [
-        ItemPenjualanData::from([
+        [
             'kode_barang' => $barang->kode_barang,
             'qty' => 2,
             'harga_satuan' => 15000,
             'jumlah' => 30000,
-        ]),
+        ],
     ];
 
-    $penjualanData = new PenjualanData(
-        id_nota: 'INV-TEST-001',
-        tgl: now()->toDateTimeString(),
-        kode_pelanggan: $pelanggan->id_pelanggan,
-        user_id: $user->id,
-        subtotal: 30000,
-        diskon: 0,
-        pajak: 0,
-        items: $items,
-    );
+    $penjualanData = PenjualanData::from([
+        'id_nota' => 'INV-TEST-001',
+        'tgl' => now()->toDateTimeString(),
+        'kode_pelanggan' => $pelanggan->id_pelanggan,
+        'user_id' => $user->id,
+        'subtotal' => 30000,
+        'diskon' => 0,
+        'pajak' => 0,
+        'items' => $items,
+    ]);
 
     $action = new CreatePenjualanAction;
     $penjualan = $action->execute($penjualanData);
@@ -103,24 +103,24 @@ it('retains item nama when barang is soft deleted', function () {
     ]);
 
     $items = [
-        ItemPenjualanData::from([
+        [
             'kode_barang' => $barang->kode_barang,
             'qty' => 1,
             'harga_satuan' => 5000,
             'jumlah' => 5000,
-        ]),
+        ],
     ];
 
-    $penjualanData = new PenjualanData(
-        id_nota: 'INV-TEST-DEL-001',
-        tgl: now()->toDateTimeString(),
-        kode_pelanggan: null,
-        user_id: $user->id,
-        subtotal: 5000,
-        diskon: 0,
-        pajak: 0,
-        items: $items,
-    );
+    $penjualanData = PenjualanData::from([
+        'id_nota' => 'INV-TEST-DEL-001',
+        'tgl' => now()->toDateTimeString(),
+        'kode_pelanggan' => null,
+        'user_id' => $user->id,
+        'subtotal' => 5000,
+        'diskon' => 0,
+        'pajak' => 0,
+        'items' => $items,
+    ]);
 
     $action = new CreatePenjualanAction;
     $penjualan = $action->execute($penjualanData);
