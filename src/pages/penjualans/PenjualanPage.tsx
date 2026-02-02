@@ -22,6 +22,7 @@ import {
   DialogCloseTrigger,
   Input,
 } from '@chakra-ui/react';
+import * as Alert from '../../components/common/Alert';
 import ConfirmDialog from '../../components/common/ConfirmDialog';
 import Pagination from '../../components/common/Pagination';
 import usePermissions from '../../hooks/usePermissions';
@@ -55,6 +56,8 @@ export default function PenjualanPage() {
     items: [{ id_barang: '', jumlah: 1 }],
   });
   const [submitAttempted, setSubmitAttempted] = useState(0);
+  // server-side validation errors to show inside the form
+  const [serverErrors, setServerErrors] = useState<Record<string, string[]> | null>(null);
 
   // Detail view state
   const [isDetailOpen, setDetailOpen] = useState(false);
@@ -111,6 +114,8 @@ export default function PenjualanPage() {
   const handleSubmit = async () => {
     // mark that user tried to submit so the form can show outlines
     setSubmitAttempted((s) => s + 1);
+    // clear previous server errors when retrying
+    setServerErrors(null);
 
     try {
       if (formData.items.length === 0) {
@@ -159,7 +164,16 @@ export default function PenjualanPage() {
     } catch (err: unknown) {
       const e = err as any;
       const message = e?.response?.data?.message || 'Gagal menyimpan penjualan';
-      toaster.error({ title: 'Error', description: message });
+
+      // If server returned validation errors, set them to show inside form (no toast)
+      if (e?.response?.data?.errors) {
+        const errs = e.response.data.errors as Record<string, string[]>;
+        setServerErrors(errs);
+        console.debug('Server validation errors:', errs);
+      } else {
+        toaster.error({ title: 'Error', description: message });
+        console.debug('API error:', e);
+      }
     }
   };
 
@@ -295,12 +309,27 @@ export default function PenjualanPage() {
             <DialogCloseTrigger />
           </DialogHeader>
           <DialogBody>
+            {serverErrors && (
+              <Alert.Root status="error" style={{ marginBottom: 16 }}>
+                <Alert.Indicator status="error" />
+                <Box>
+                  <Alert.Title color="gray.800">Validasi gagal</Alert.Title>
+                  <Box mt={2}>
+                    {Object.entries(serverErrors).map(([k, v]) => (
+                      <Text key={k} fontSize="sm" color="gray.800">{v.join(', ')}</Text>
+                    ))}
+                  </Box>
+                </Box>
+              </Alert.Root>
+            )}
+
             <PenjualanForm
               barangs={barangs}
               pelanggans={pelanggans}
               formData={formData}
               setFormData={setFormData}
               submitAttempted={submitAttempted}
+              serverErrors={serverErrors}
             />
           </DialogBody>
           <DialogFooter>

@@ -28,7 +28,7 @@ interface PenjualanFormProps {
   setFormData: (data: FormData) => void;
 }
 
-export default function PenjualanForm({ barangs, pelanggans, formData, setFormData, submitAttempted }: PenjualanFormProps & { submitAttempted?: number }) {
+export default function PenjualanForm({ barangs, pelanggans, formData, setFormData, submitAttempted, serverErrors }: PenjualanFormProps & { submitAttempted?: number, serverErrors?: Record<string, string[]> | null }) {
   const toaster = createToaster({ placement: 'top-end', pauseOnPageIdle: true });
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('id-ID', {
@@ -66,6 +66,27 @@ export default function PenjualanForm({ barangs, pelanggans, formData, setFormDa
   useEffect(() => {
     setErrors((prev: { items: { id_barang?: boolean; jumlah?: boolean }[]; form?: boolean }) => ({ items: formData.items.map((_it, i) => prev.items[i] ?? {}), form: prev.form }));
   }, [formData.items.length]);
+
+
+
+  // map server errors to field highlights
+  useEffect(() => {
+    if (!serverErrors) return;
+    const itemErrs = formData.items.map(() => ({} as { id_barang?: boolean; jumlah?: boolean }));
+
+    Object.keys(serverErrors).forEach((k) => {
+      const m = k.match(/^items\.(\d+)\.(.+)$/);
+      if (m) {
+        const idx = Number(m[1]);
+        const field = m[2];
+        if (!itemErrs[idx]) return;
+        if (field === 'qty') itemErrs[idx].jumlah = true;
+        if (field === 'kode_barang') itemErrs[idx].id_barang = true;
+      }
+    });
+
+    setErrors((prev) => ({ items: itemErrs.map((it, i) => ({ ...prev.items[i], ...it })), form: prev.form }));
+  }, [serverErrors, formData.items.length]);
 
   // run validation when parent indicates a submit attempt
   useEffect(() => {
@@ -111,6 +132,10 @@ export default function PenjualanForm({ barangs, pelanggans, formData, setFormDa
                       required
                       isInvalid={!!errors.items[idx]?.id_barang}
                     />
+                    {serverErrors && serverErrors[`items.${idx}.kode_barang`] && (
+                      <Text color="gray.800" fontSize="sm">{serverErrors[`items.${idx}.kode_barang`].join(', ')}</Text>
+                    )}
+
                   </Field.Root>
                   <Box w="full">
                     <NumberField
@@ -136,6 +161,10 @@ export default function PenjualanForm({ barangs, pelanggans, formData, setFormDa
                       required
                       isInvalid={!!errors.items[idx]?.jumlah}
                     />
+                    {serverErrors && serverErrors[`items.${idx}.qty`] && (
+                      <Text color="gray.800" fontSize="sm">{serverErrors[`items.${idx}.qty`].join(', ')}</Text>
+                    )}
+
                     <Text fontSize="sm" color="gray.600">Stok: {barangs.find((b) => b.kode_barang === item.id_barang)?.stok ?? '-'}</Text>
                     {formData.items.length > 1 && (
                       <Button colorScheme="red" variant="outline" size="sm" mt={2}
